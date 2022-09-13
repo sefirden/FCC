@@ -10,11 +10,12 @@ public class Settings : MonoBehaviour
     public static Settings Instance { get; private set; } //определяем
 
     public KeyCode screenShotButton;
-    public string language;
-    public string convertFrom;
-    public string convertTo;
-    public string input;
-    public int decimalPlaces;
+    public string language; //язык приложения
+    public string convertFrom; //конвертируем из
+    public string convertTo; //конвертируем в
+    public string inputValue; //последние введенные данные
+    public int decimalPlaces; //количество знаков после запятой
+    public bool inputLayer; //выбор режима ввода данных, если тру то поле для ввода, если фелс то слайдер
 
     
 
@@ -41,4 +42,3 @@ public class Settings : MonoBehaviour
         }
     }
 }
-
