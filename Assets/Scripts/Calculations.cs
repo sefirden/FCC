@@ -12,10 +12,16 @@ public class Calculations : MonoBehaviour
     public TMP_Text resultText;
     public TMP_Dropdown convertFrom_drop;
     public TMP_Dropdown convertTo_drop;
-    public Slider decimalPlaces_slider;
+    
 
     private List<FormulaList> formulas;
     double doubleInput;
+
+    public GameObject SettingsLayer;
+    public GameObject ValueLayer;
+
+    public GameObject ClassicInput;
+    public GameObject SliderInput;
 
     public double staticvalue;
 
@@ -24,9 +30,28 @@ public class Calculations : MonoBehaviour
     private void Awake() //запускается до всех стартов
     {
         FillFormulas();
+        FindStaticvalue();
 
-        inputValue.text = Settings.Instance.inputValue;
-        decimalPlaces_slider.value = Settings.Instance.decimalPlaces;
+        if (Settings.Instance.inputLayer)
+        {
+            ClassicInput.SetActive(true);
+            SliderInput.SetActive(false);
+
+            inputValue.text = Settings.Instance.inputValue;
+            if (inputValue.text != "")
+                ConvertValue();
+        }
+        else
+        {
+            ClassicInput.SetActive(false);
+            SliderInput.SetActive(true);
+
+            //данные со слайдера = Settings.Instance.inputValue;
+            //if (данные со слайдера != "")
+            //    ConvertValue();
+        }
+
+
 
         convertFrom_drop.AddOptions(dropStrings);
         convertFrom_drop.value = dropStrings.IndexOf(Settings.Instance.convertFrom);
@@ -43,11 +68,7 @@ public class Calculations : MonoBehaviour
             Settings.Instance.convertTo = dropStrings[convertTo_drop.value];
             FindStaticvalue();
             ConvertValue();
-        });
-
-        FindStaticvalue();
-        if (inputValue.text !="")
-        ConvertValue();
+        });        
     }
 
     public void ChangeFromTo()
@@ -93,7 +114,7 @@ public class Calculations : MonoBehaviour
         
     }
 
-    public void OnInputChange()
+    public void OnInputChange() //для инпут поля
     {        
         try
         {
@@ -122,7 +143,7 @@ public class Calculations : MonoBehaviour
         }
     }
 
-    private void ConvertValue()
+    public void ConvertValue()
     {
         double value;
         //при расчетах проверяем если число больше 62 то делим его на ввоодимое значение, если меньше то множим
@@ -137,7 +158,16 @@ public class Calculations : MonoBehaviour
         
         string result = value.ToString();
         resultText.text = result;
-        Settings.Instance.inputValue = inputValue.text;
+
+        if (Settings.Instance.inputLayer)
+        {
+            Settings.Instance.inputValue = inputValue.text;
+        }
+        else
+        {
+            //Settings.Instance.inputValue = данные со слайдера
+        }
+
     }
 
     public void FindStaticvalue()
@@ -147,11 +177,32 @@ public class Calculations : MonoBehaviour
         staticvalue = find.Formula;
     }
 
-    public void ChangeDecimalPlaces()
+    public void ToSettings()
     {
-        Settings.Instance.decimalPlaces = Convert.ToInt32(decimalPlaces_slider.value);
-        ConvertValue();
+        SettingsLayer.SetActive(true);
+        ValueLayer.SetActive(false);
     }
+
+    public void BackToInput()
+    {
+        ValueLayer.SetActive(true);
+        SettingsLayer.SetActive(false);
+
+        if (Settings.Instance.inputLayer)
+        {
+            ClassicInput.SetActive(true);
+            SliderInput.SetActive(false);
+
+            inputValue.text = Settings.Instance.inputValue;
+        }
+        else
+        {
+            ClassicInput.SetActive(false);
+            SliderInput.SetActive(true);
+            //данные со слайдера = Settings.Instance.inputValue;
+        }
+    }
+
 }
 
 public class FormulaList
