@@ -95,7 +95,7 @@ public class SaveSystem : MonoBehaviour
         {
             Settings.Instance.language = "en";
             Settings.Instance.convertFrom = "mpg (US)";
-            Settings.Instance.convertTo = "l / 100km";
+            Settings.Instance.convertTo = "l/100km";
             Settings.Instance.inputValue = "0";
             Settings.Instance.decimalPlaces = 2;
             Settings.Instance.inputLayer = false;

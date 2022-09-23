@@ -29,8 +29,24 @@ public class Calculations : MonoBehaviour
 
     private void Awake() //запускается до всех стартов
     {
-        FillFormulas();
-        FindStaticvalue();
+        FillFormulas();      
+
+        convertFrom_drop.AddOptions(dropStrings);
+        convertFrom_drop.value = dropStrings.IndexOf(Settings.Instance.convertFrom);
+        convertFrom_drop.onValueChanged.AddListener(delegate {
+            Settings.Instance.convertFrom = dropStrings[convertFrom_drop.value];
+            FindStaticvalue();
+            ConvertValue();
+        });
+
+        convertTo_drop.AddOptions(dropStrings);
+        convertTo_drop.value = dropStrings.IndexOf(Settings.Instance.convertTo);
+        convertTo_drop.onValueChanged.AddListener(delegate
+        {
+            Settings.Instance.convertTo = dropStrings[convertTo_drop.value];
+            FindStaticvalue();
+            ConvertValue();
+        });
 
         if (Settings.Instance.inputLayer)
         {
@@ -51,24 +67,7 @@ public class Calculations : MonoBehaviour
             //    ConvertValue();
         }
 
-
-
-        convertFrom_drop.AddOptions(dropStrings);
-        convertFrom_drop.value = dropStrings.IndexOf(Settings.Instance.convertFrom);
-        convertFrom_drop.onValueChanged.AddListener(delegate {
-            Settings.Instance.convertFrom = dropStrings[convertFrom_drop.value];
-            FindStaticvalue();
-            ConvertValue();
-        });
-
-        convertTo_drop.AddOptions(dropStrings);
-        convertTo_drop.value = dropStrings.IndexOf(Settings.Instance.convertTo);
-        convertTo_drop.onValueChanged.AddListener(delegate
-        {
-            Settings.Instance.convertTo = dropStrings[convertTo_drop.value];
-            FindStaticvalue();
-            ConvertValue();
-        });        
+        FindStaticvalue();
     }
 
     public void ChangeFromTo()
