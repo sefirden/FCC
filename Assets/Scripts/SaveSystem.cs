@@ -86,10 +86,11 @@ public class SaveSystem : MonoBehaviour
             Settings.Instance.convertTo = settings.convertTo;
             Settings.Instance.inputValue = settings.inputValue;
             Settings.Instance.decimalPlaces = settings.decimalPlaces;
+            Settings.Instance.decimalSlider = settings.decimalPlaces;
+            Settings.Instance.sliderNumbersQ = settings.sliderNumbersQ;
             Settings.Instance.inputLayer = settings.inputLayer;
 
             LoadLanguage(settings.language); //загружаем язык
-            Debug.Log("SettingsLoad");
         }
         else //если файла сейва нет, то загружаем настройки по умолчанию
         {
@@ -98,6 +99,8 @@ public class SaveSystem : MonoBehaviour
             Settings.Instance.convertTo = "l/100km";
             Settings.Instance.inputValue = "0";
             Settings.Instance.decimalPlaces = 2;
+            Settings.Instance.decimalSlider = 1;
+            Settings.Instance.sliderNumbersQ = 2;
             Settings.Instance.inputLayer = false;
 
             LoadLanguage("en"); //по умолчанию английский язык
@@ -118,11 +121,11 @@ public class SaveSystem : MonoBehaviour
         settings.convertTo = Settings.Instance.convertTo;
         settings.inputValue = Settings.Instance.inputValue;
         settings.decimalPlaces = Settings.Instance.decimalPlaces;
+        settings.decimalPlaces = Settings.Instance.decimalSlider;
+        settings.sliderNumbersQ = Settings.Instance.sliderNumbersQ;
         settings.inputLayer = Settings.Instance.inputLayer;
 
         File.WriteAllText(path, JsonUtility.ToJson(settings)); //берем все и записываем в жсон
-        Debug.Log("SettingsSave");
-
     }
 
 
@@ -144,5 +147,7 @@ public class SettingsSaves //класс с настройками, нужен для сохранения
     public string convertTo; //конвертируем в
     public string inputValue; //последние введенные данные
     public int decimalPlaces; //количество знаков после запятой
+    public int decimalSlider; //количество знаков после запятой у слайдера
+    public int sliderNumbersQ; //количество всего слайдеров для выбора цифр
     public bool inputLayer; //выбор режима ввода данных, если тру то поле для ввода, если фелс то слайдер
 }

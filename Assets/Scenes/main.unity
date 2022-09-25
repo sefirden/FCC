@@ -1433,8 +1433,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 434834894}
-  - component: {fileID: 434834891}
-  - component: {fileID: 434834892}
   m_Layer: 0
   m_Name: Settings
   m_TagString: Untagged
@@ -1442,55 +1440,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &434834891
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 434834889}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4d9f4bc5ad5e5b04ab30a8f898aa1efe, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  screenShotButton: 271
-  language: en
-  convertFrom: mpg (US)
-  convertTo: l/100km
-  inputValue: 25
-  decimalPlaces: 2
-  inputLayer: 0
-  language_drop: {fileID: 593554227}
-  decimalPlaces_slider: {fileID: 1794343637}
-  Toggle_inputLayer: {fileID: 1843815669}
-  SettingsLayer: {fileID: 605291637}
-  ValueLayer: {fileID: 1024591069}
-  ClassicInput: {fileID: 740617514}
-  SliderInput: {fileID: 1503341211}
-  myLangs:
-  - en
-  - ru
-  - ua
---- !u!114 &434834892
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 434834889}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 918b5039219308c46a87d13bbdba9a46, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  settings:
-    language: 
-    convertFrom: 
-    convertTo: 
-    inputValue: 
-    decimalPlaces: 0
-    inputLayer: 0
 --- !u!224 &434834894
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3402,6 +3351,97 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 910691148}
   m_CullTransparentMesh: 1
+--- !u!1 &934884736
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 934884741}
+  - component: {fileID: 934884743}
+  - component: {fileID: 934884742}
+  m_Layer: 5
+  m_Name: managers
+  m_TagString: Untagged
+  m_Icon: {fileID: 2974397684917235467, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &934884741
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 934884736}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 4.6110067}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -0.978935, y: 1.6640443}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &934884742
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 934884736}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 918b5039219308c46a87d13bbdba9a46, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  settings:
+    language: 
+    convertFrom: 
+    convertTo: 
+    inputValue: 
+    decimalPlaces: 0
+    decimalSlider: 0
+    sliderNumbersQ: 0
+    inputLayer: 0
+--- !u!114 &934884743
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 934884736}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4d9f4bc5ad5e5b04ab30a8f898aa1efe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  screenShotButton: 271
+  language: en
+  convertFrom: mpg (US)
+  convertTo: l/100km
+  inputValue: 25
+  decimalPlaces: 2
+  decimalSlider: 1
+  sliderNumbersQ: 2
+  inputLayer: 0
+  language_drop: {fileID: 593554227}
+  decimalPlaces_slider: {fileID: 1794343637}
+  Toggle_inputLayer: {fileID: 1843815669}
+  SettingsLayer: {fileID: 605291637}
+  ValueLayer: {fileID: 1024591069}
+  ClassicInput: {fileID: 740617514}
+  SliderInput: {fileID: 1503341211}
+  myLangs:
+  - en
+  - ru
+  - ua
 --- !u!1 &963194225
 GameObject:
   m_ObjectHideFlags: 0
@@ -6149,7 +6189,7 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
-  m_PresetInfoIsWorld: 0
+  m_PresetInfoIsWorld: 1
 --- !u!223 &1726436893
 Canvas:
   m_ObjectHideFlags: 0
@@ -6229,9 +6269,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 1726436890}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1c5e6481f3b036842ab1349ca0506571, type: 3}
+  m_Script: {fileID: 11500000, guid: 45ad3b81070825d48beafadf560114b7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  minimumDistance: 0.2
+  maximumTime: 1
+  directionTreshold: 0.9
 --- !u!114 &1726436898
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6241,12 +6284,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 1726436890}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 45ad3b81070825d48beafadf560114b7, type: 3}
+  m_Script: {fileID: 11500000, guid: 1c5e6481f3b036842ab1349ca0506571, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  minimumDistance: 0.2
-  maximumTime: 1
-  directionTreshold: 0.9
 --- !u!1 &1786710299
 GameObject:
   m_ObjectHideFlags: 0
@@ -6414,7 +6454,7 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 434834891}
+      - m_Target: {fileID: 934884743}
         m_TargetAssemblyTypeName: Settings, Assembly-CSharp
         m_MethodName: ChangeDecimalPlaces
         m_Mode: 1
@@ -6738,7 +6778,7 @@ MonoBehaviour:
   onValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 434834891}
+      - m_Target: {fileID: 934884743}
         m_TargetAssemblyTypeName: Settings, Assembly-CSharp
         m_MethodName: ChangeInputLayer
         m_Mode: 1

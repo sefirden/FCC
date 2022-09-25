@@ -19,6 +19,8 @@ public class Settings : MonoBehaviour
     public string convertTo; //конвертируем в
     public string inputValue; //последние введенные данные
     public int decimalPlaces; //количество знаков после запятой
+    public int decimalSlider; //количество знаков после запятой у слайдера
+    public int sliderNumbersQ; //количество всего слайдеров для выбора цифр
     public bool inputLayer; //выбор режима ввода данных, если тру то поле для ввода, если фелс то слайдер
 
     public TMP_Dropdown language_drop;

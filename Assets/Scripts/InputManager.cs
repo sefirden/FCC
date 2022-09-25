@@ -23,11 +23,7 @@ public class InputManager : MonoBehaviour
             if (Instance == null) //если объекта ещё нет
             {
                 Instance = this; //говорим что вот кагбе он
-                DontDestroyOnLoad(gameObject); //и говорим что его нельзя ломать между уровнями, иначе он нахер не нужен
-            }
-            else //но, если вдруг на уровне такой уже есть
-            {
-                Destroy(gameObject); //то ломаем его к херам
+                //DontDestroyOnLoad(gameObject); //и говорим что его нельзя ломать между уровнями, иначе он нахер не нужен
             }
 
         swipeControls = new SwipeControls();
