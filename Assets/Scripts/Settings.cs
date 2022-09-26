@@ -18,6 +18,7 @@ public class Settings : MonoBehaviour
     public string convertFrom; //конвертируем из
     public string convertTo; //конвертируем в
     public string inputValue; //последние введенные данные
+    public string inputSliderValue; //последние введенные данные
     public int decimalPlaces; //количество знаков после запятой
     public int decimalSlider; //количество знаков после запятой у слайдера
     public int sliderNumbersQ; //количество всего слайдеров для выбора цифр
@@ -61,7 +62,6 @@ public class Settings : MonoBehaviour
         ApplyLanguageChanges(); //применяем настройки смены языка при выборе другого
         });        
     }
-
 
     void ApplyLanguageChanges() //применяем настройки смены языка при выборе другого
     {

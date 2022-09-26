@@ -27,6 +27,9 @@ public class Calculations : MonoBehaviour
 
     public List<string> dropStrings;
 
+    public GameObject sampleSliderInput;
+    public List<GameObject> slidersForInput;
+
     private void Awake() //запускается до всех стартов
     {
         FillFormulas();      
@@ -62,12 +65,91 @@ public class Calculations : MonoBehaviour
             ClassicInput.SetActive(false);
             SliderInput.SetActive(true);
 
-            //данные со слайдера = Settings.Instance.inputValue;
-            //if (данные со слайдера != "")
-            //    ConvertValue();
+            SetSliderInput();
+            OnSliderChange();
         }
 
         FindStaticvalue();
+    }
+
+
+    public void SetSliderInput()
+    {
+        slidersForInput.Clear();
+        try
+        {
+            foreach (Transform child in SliderInput.transform)
+            {
+                Destroy(child.gameObject);
+            }
+        }
+        catch
+        {
+            Debug.LogError("No child found");
+        }
+
+        if (slidersForInput.Count < Settings.Instance.sliderNumbersQ + Settings.Instance.decimalSlider)
+        {
+            for (int i = 0; i < (Settings.Instance.sliderNumbersQ + Settings.Instance.decimalSlider); i++)
+            {
+                GameObject slider_temp = Instantiate(sampleSliderInput, sampleSliderInput.transform.position, Quaternion.identity, SliderInput.transform);
+                slider_temp.name = "slider_temp"; //присваиваем имя
+                slidersForInput.Add(slider_temp);
+            }
+        }
+
+        if (Settings.Instance.inputSliderValue != "0")
+        {
+            char[] characters = Settings.Instance.inputSliderValue.ToCharArray();
+
+            if (characters.Length < Settings.Instance.sliderNumbersQ + Settings.Instance.decimalSlider)
+            {
+                for (int i = 0; i < characters.Length; i++)
+                {
+                    slidersForInput[i].GetComponentInChildren<TMP_Text>().text = Convert.ToString(characters[i]);
+                }
+            }
+            else
+            {
+                for (int i = 0; i < (Settings.Instance.sliderNumbersQ + Settings.Instance.decimalSlider); i++)
+                {
+                    slidersForInput[i].GetComponentInChildren<TMP_Text>().text = Convert.ToString(characters[i]);
+                }
+            }
+        }
+    }
+
+    public void OnSliderChange()
+    {
+        string temp = "";
+        for (int i = 0; i < slidersForInput.Count; i++)
+        {
+            temp += slidersForInput[i].GetComponentInChildren<TMP_Text>().text;
+        }
+
+        try
+        {
+            doubleInput = Convert.ToDouble(temp);
+        }
+        catch
+        {
+            doubleInput = 0;            
+        }
+
+        if (doubleInput != 0)
+        {
+            Settings.Instance.inputSliderValue = temp;
+            if(Settings.Instance.decimalSlider != 0)
+            {
+                for(int i = 0; i < Settings.Instance.decimalSlider; i++)
+                doubleInput /= 10;
+            }            
+            ConvertValue();
+        }
+        else
+        {
+            resultText.text = "Enter valid data";
+        }
     }
 
     public void ChangeFromTo()
@@ -162,11 +244,6 @@ public class Calculations : MonoBehaviour
         {
             Settings.Instance.inputValue = inputValue.text;
         }
-        else
-        {
-            //Settings.Instance.inputValue = данные со слайдера
-        }
-
     }
 
     public void FindStaticvalue()
@@ -198,7 +275,8 @@ public class Calculations : MonoBehaviour
         {
             ClassicInput.SetActive(false);
             SliderInput.SetActive(true);
-            //данные со слайдера = Settings.Instance.inputValue;
+
+            SetSliderInput();
         }
     }
 

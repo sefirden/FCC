@@ -12,6 +12,7 @@ public class SwipeDetection : MonoBehaviour
     PointerEventData m_PointerEventData;
     EventSystem m_EventSystem;
     GameObject tempGameObject;
+    Calculations calculations;
 
     [SerializeField]
     private float minimumDistance = 0.2f;
@@ -38,6 +39,7 @@ public class SwipeDetection : MonoBehaviour
         m_Raycaster = GetComponent<GraphicRaycaster>();
         //Fetch the Event System from the Scene
         m_EventSystem = GetComponent<EventSystem>();
+        calculations = FindObjectOfType<Calculations>();
     }
 
     private void OnEnable()
@@ -123,6 +125,7 @@ public class SwipeDetection : MonoBehaviour
             currentNumber += 1;
         }
         tempGameObject.GetComponent<TMP_Text>().text = Convert.ToString(currentNumber);
+        calculations.OnSliderChange();
     }
 
     private void NumberMinus()
@@ -137,5 +140,6 @@ public class SwipeDetection : MonoBehaviour
             currentNumber -= 1;
         }
         tempGameObject.GetComponent<TMP_Text>().text = Convert.ToString(currentNumber);
+        calculations.OnSliderChange();
     }
 }

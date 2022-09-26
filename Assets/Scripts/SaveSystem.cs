@@ -85,10 +85,12 @@ public class SaveSystem : MonoBehaviour
             Settings.Instance.convertFrom = settings.convertFrom;
             Settings.Instance.convertTo = settings.convertTo;
             Settings.Instance.inputValue = settings.inputValue;
+            Settings.Instance.inputSliderValue = settings.inputSliderValue;
             Settings.Instance.decimalPlaces = settings.decimalPlaces;
-            Settings.Instance.decimalSlider = settings.decimalPlaces;
+            Settings.Instance.decimalSlider = settings.decimalSlider;
             Settings.Instance.sliderNumbersQ = settings.sliderNumbersQ;
             Settings.Instance.inputLayer = settings.inputLayer;
+
 
             LoadLanguage(settings.language); //загружаем язык
         }
@@ -97,7 +99,8 @@ public class SaveSystem : MonoBehaviour
             Settings.Instance.language = "en";
             Settings.Instance.convertFrom = "mpg (US)";
             Settings.Instance.convertTo = "l/100km";
-            Settings.Instance.inputValue = "0";
+            Settings.Instance.inputValue = "25";
+            Settings.Instance.inputSliderValue = "25";
             Settings.Instance.decimalPlaces = 2;
             Settings.Instance.decimalSlider = 1;
             Settings.Instance.sliderNumbersQ = 2;
@@ -120,8 +123,9 @@ public class SaveSystem : MonoBehaviour
         settings.convertFrom = Settings.Instance.convertFrom;
         settings.convertTo = Settings.Instance.convertTo;
         settings.inputValue = Settings.Instance.inputValue;
+        settings.inputSliderValue = Settings.Instance.inputSliderValue;
         settings.decimalPlaces = Settings.Instance.decimalPlaces;
-        settings.decimalPlaces = Settings.Instance.decimalSlider;
+        settings.decimalSlider = Settings.Instance.decimalSlider;
         settings.sliderNumbersQ = Settings.Instance.sliderNumbersQ;
         settings.inputLayer = Settings.Instance.inputLayer;
 
@@ -146,6 +150,7 @@ public class SettingsSaves //класс с настройками, нужен для сохранения
     public string convertFrom; //конвертируем из
     public string convertTo; //конвертируем в
     public string inputValue; //последние введенные данные
+    public string inputSliderValue; //последние введенные данные
     public int decimalPlaces; //количество знаков после запятой
     public int decimalSlider; //количество знаков после запятой у слайдера
     public int sliderNumbersQ; //количество всего слайдеров для выбора цифр
