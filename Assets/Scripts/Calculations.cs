@@ -3,8 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.PlayerLoop;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using UnityEngine.UIElements;
 
 public class Calculations : MonoBehaviour
 {
@@ -117,7 +119,27 @@ public class Calculations : MonoBehaviour
                 }
             }
         }
+        StartCoroutine(SetSliderDecimal());
     }
+
+    public IEnumerator SetSliderDecimal()
+    {
+        if (Settings.Instance.sliderNumbersQ < 5 && Settings.Instance.decimalSlider > 0)
+        {
+            TMP_Text number = slidersForInput[Settings.Instance.sliderNumbersQ - 1].transform.Find("firstNumber").GetComponent<TMP_Text>();
+            TMP_Text decimal_t = slidersForInput[Settings.Instance.sliderNumbersQ - 1].transform.Find("decimal").GetComponent<TMP_Text>();
+
+            while(number.fontSize == 18f)
+            {
+                yield return new WaitForFixedUpdate();
+            }            
+            decimal_t.fontSize = number.fontSize;
+
+            RectTransform rt = decimal_t.GetComponent<RectTransform>();
+            rt.localPosition += new Vector3(slidersForInput[Settings.Instance.sliderNumbersQ - 1].GetComponent<RectTransform>().rect.width/2,0,0);
+        }
+    }
+
 
     public void OnSliderChange()
     {
@@ -217,6 +239,7 @@ public class Calculations : MonoBehaviour
         if (doubleInput != 0)
         {
             ConvertValue();
+
         }
         else
         {
@@ -277,6 +300,7 @@ public class Calculations : MonoBehaviour
             SliderInput.SetActive(true);
 
             SetSliderInput();
+            OnSliderChange();
         }
     }
 

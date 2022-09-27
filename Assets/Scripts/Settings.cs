@@ -26,6 +26,8 @@ public class Settings : MonoBehaviour
 
     public TMP_Dropdown language_drop;
     public Slider decimalPlaces_slider;
+    public Slider decimalSlider_slider;
+    public Slider sliderNumbersQ_slider;
     public Toggle Toggle_inputLayer;
 
     public GameObject SettingsLayer;
@@ -55,7 +57,11 @@ public class Settings : MonoBehaviour
     {
         language_drop.value = Array.IndexOf(myLangs, language);
         decimalPlaces_slider.value = decimalPlaces;
+        decimalSlider_slider.value = decimalSlider;
+        sliderNumbersQ_slider.value = sliderNumbersQ;
         Toggle_inputLayer.isOn = inputLayer;
+
+
 
         language_drop.onValueChanged.AddListener(delegate { //ставим его в дропдовн меню
         language = myLangs[language_drop.value];
@@ -73,6 +79,27 @@ public class Settings : MonoBehaviour
     public void ChangeDecimalPlaces()
     {
         decimalPlaces = Convert.ToInt32(decimalPlaces_slider.value);
+        SaveSystem.Instance.SettingsSave(); //сохраняем настройки с новым языком
+    }
+
+    public void ChangeDecimalSlider()
+    {
+        decimalSlider = Convert.ToInt32(decimalSlider_slider.value);
+
+        if((decimalSlider + sliderNumbersQ) > 5)
+        sliderNumbersQ_slider.value = 5 - decimalSlider;
+
+        SaveSystem.Instance.SettingsSave(); //сохраняем настройки с новым языком
+    }
+
+    public void ChangeNumberQSlider()
+    {
+        sliderNumbersQ = Convert.ToInt32(sliderNumbersQ_slider.value);
+
+        if ((decimalSlider + sliderNumbersQ) > 5)
+        decimalSlider_slider.value = 5 - sliderNumbersQ;
+
+        SaveSystem.Instance.SettingsSave(); //сохраняем настройки с новым языком
     }
 
     public void ChangeInputLayer()
