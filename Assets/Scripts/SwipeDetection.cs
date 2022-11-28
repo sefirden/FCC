@@ -105,11 +105,17 @@ public class SwipeDetection : MonoBehaviour
     {
         if(Vector2.Dot(Vector2.up, direction) > directionTreshold)
         {
-            NumberPlus();
+            if (Settings.Instance.invertInputSlider)
+                NumberMinus();
+            else
+                NumberPlus();
         }
         else if (Vector2.Dot(Vector2.down, direction) > directionTreshold)
         {
-            NumberMinus();
+            if (Settings.Instance.invertInputSlider)
+                NumberPlus();
+            else
+                NumberMinus();
         }
     }
 

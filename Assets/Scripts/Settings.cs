@@ -23,15 +23,18 @@ public class Settings : MonoBehaviour
     public int decimalSlider; //количество знаков после запятой у слайдера
     public int sliderNumbersQ; //количество всего слайдеров для выбора цифр
     public bool inputLayer; //выбор режима ввода данных, если тру то поле для ввода, если фелс то слайдер
+    public bool invertInputSlider; //когда тру инвертируем слайдер для ввода цифр
 
     public TMP_Dropdown language_drop;
     public Slider decimalPlaces_slider;
     public Slider decimalSlider_slider;
     public Slider sliderNumbersQ_slider;
     public Toggle Toggle_inputLayer;
+    public Toggle Toggle_invertInputSlider;
 
     public GameObject SettingsLayer;
     public GameObject ValueLayer;
+    public GameObject SliderSettingsHide;
 
     public GameObject ClassicInput;
     public GameObject SliderInput;
@@ -60,8 +63,16 @@ public class Settings : MonoBehaviour
         decimalSlider_slider.value = decimalSlider;
         sliderNumbersQ_slider.value = sliderNumbersQ;
         Toggle_inputLayer.isOn = inputLayer;
+        Toggle_invertInputSlider.isOn = invertInputSlider;
 
-
+        if (inputLayer)
+        {
+            SliderSettingsHide.SetActive(false);
+        }
+        else
+        {
+            SliderSettingsHide.SetActive(true);
+        }
 
         language_drop.onValueChanged.AddListener(delegate { //ставим его в дропдовн меню
         language = myLangs[language_drop.value];
@@ -102,11 +113,27 @@ public class Settings : MonoBehaviour
         SaveSystem.Instance.SettingsSave(); //сохраняем настройки с новым языком
     }
 
+    public void ChangeInvertInputSlider()
+    {
+        invertInputSlider = Toggle_invertInputSlider.isOn;
+
+        SaveSystem.Instance.SettingsSave();
+    }
+
     public void ChangeInputLayer()
     {
         inputLayer = Toggle_inputLayer.isOn;
 
-        SaveSystem.Instance.SettingsSave(); //сохраняем настройки с новым языком
+        if(inputLayer)
+        {
+            SliderSettingsHide.SetActive(false);
+        }
+        else
+        {
+            SliderSettingsHide.SetActive(true);
+        }
+
+        SaveSystem.Instance.SettingsSave();
     }
 
 #if UNITY_ANDROID || UNITY_EDITOR

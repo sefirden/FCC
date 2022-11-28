@@ -21,7 +21,7 @@ public class Data
     public string ConvertTo { get; set; }
     
 
-    public Data(string D, string I, string Cf, string R, string Ct)//в таком порядке заполняем данные для пиццы
+    public Data(string D, string I, string Cf, string R, string Ct)//в таком порядке заполняем данные
     {
         Date = D;
         Input = I;
