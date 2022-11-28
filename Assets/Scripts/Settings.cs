@@ -109,6 +109,16 @@ public class Settings : MonoBehaviour
         SaveSystem.Instance.SettingsSave(); //сохраняем настройки с новым языком
     }
 
+#if UNITY_ANDROID || UNITY_EDITOR
+    void OnApplicationFocus(bool focusStatus) //при сворачивании игры ставит ее на паузу, даже если этого нделал игрок и как раз сейвит игру, если так работает, то можно убрать сейв при выходе из игры
+    {
+        if (focusStatus == false)
+        {
+            SaveSystem.Instance.SettingsSave(); //сохраняем настройки с новым языком
+        }
+    }
+#endif
+
     void Update()
     {
         if (Input.GetKeyDown(screenShotButton))
