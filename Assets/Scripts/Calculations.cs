@@ -304,6 +304,11 @@ public class Calculations : MonoBehaviour
         }
     }
 
+    public void Quit() //выход из игры
+    {
+        Application.Quit();
+    }
+
 }
 
 public class FormulaList

@@ -9,7 +9,7 @@ public class LabelPosition : MonoBehaviour
 
     void Start()
     {
-        StartCoroutine(SetPaddingRight());
+        //StartCoroutine(SetPaddingRight());
 
     }
 
