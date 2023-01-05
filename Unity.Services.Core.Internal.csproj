@@ -64,8 +64,8 @@
     <Compile Include="Library\PackageCache\com.unity.services.core@1.4.2\Runtime\Core.Internal\Telemetry\CoreDiagnostics.cs" />
     <Compile Include="Library\PackageCache\com.unity.services.core@1.4.2\Runtime\Core.Internal\Registry\CoreRegistryInitializer.cs" />
     <Compile Include="Library\PackageCache\com.unity.services.core@1.4.2\Runtime\Core.Internal\Registry\ComponentRegistry\ComponentRegistry.cs" />
-    <Compile Include="Library\PackageCache\com.unity.services.core@1.4.2\Runtime\Core.Internal\Components\Wire\IChannel.cs" />
     <Compile Include="Library\PackageCache\com.unity.services.core@1.4.2\Runtime\Core.Internal\AssemblyInfo.cs" />
+    <Compile Include="Library\PackageCache\com.unity.services.core@1.4.2\Runtime\Core.Internal\Components\Wire\IChannel.cs" />
     <Compile Include="Library\PackageCache\com.unity.services.core@1.4.2\Runtime\Core.Internal\AsyncOperation\IAsyncOperationAwaiter.cs" />
     <Compile Include="Library\PackageCache\com.unity.services.core@1.4.2\Runtime\Core.Internal\Components\Telemetry\IDiagnostics.cs" />
     <Compile Include="Library\PackageCache\com.unity.services.core@1.4.2\Runtime\Core.Internal\Utils\UnityWebRequestUtils.cs" />

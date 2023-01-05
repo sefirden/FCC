@@ -160,8 +160,8 @@
     <Compile Include="Library\PackageCache\com.unity.timeline@1.6.4\Editor\inspectors\ClipInspector\ClipInspector.cs" />
     <Compile Include="Library\PackageCache\com.unity.timeline@1.6.4\Editor\Animation\AnimationClipExtensions.cs" />
     <Compile Include="Library\PackageCache\com.unity.timeline@1.6.4\Editor\treeview\TrackGui\TrackResizeHandle.cs" />
-    <Compile Include="Library\PackageCache\com.unity.timeline@1.6.4\Editor\Manipulators\Move\IMoveItemMode.cs" />
     <Compile Include="Library\PackageCache\com.unity.timeline@1.6.4\Editor\treeview\ManipulationsTracks.cs" />
+    <Compile Include="Library\PackageCache\com.unity.timeline@1.6.4\Editor\Manipulators\Move\IMoveItemMode.cs" />
     <Compile Include="Library\PackageCache\com.unity.timeline@1.6.4\Editor\Utilities\DisplayNameHelper.cs" />
     <Compile Include="Library\PackageCache\com.unity.timeline@1.6.4\Editor\Window\TimelineWindowAnalytics.cs" />
     <Compile Include="Library\PackageCache\com.unity.timeline@1.6.4\Editor\Window\TimelineWindow_PreviewPlayMode.cs" />
