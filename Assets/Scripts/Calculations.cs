@@ -10,62 +10,46 @@ using UnityEngine.UIElements;
 
 public class Calculations : MonoBehaviour
 {
-    public TMP_InputField inputValue;
-    public TMP_Text resultText;
-    public TMP_Dropdown convertFrom_drop;
-    public TMP_Dropdown convertTo_drop;
-    
-
-    private List<FormulaList> formulas;
     double doubleInput;
-
-    public GameObject SettingsLayer;
-    public GameObject ValueLayer;
-
-    public GameObject ClassicInput;
-    public GameObject SliderInput;
-
     public double staticvalue;
-
-    public List<string> dropStrings;
-
-    public GameObject sampleSliderInput;
-    public List<GameObject> slidersForInput;
+    private UI ui; //скрипт уи
+    private List<FormulaList> formulas;
 
     private void Awake() //запускается до всех стартов
     {
-        FillFormulas();      
+        ui = FindObjectOfType<UI>();
+        FillFormulas();
 
-        convertFrom_drop.AddOptions(dropStrings);
-        convertFrom_drop.value = dropStrings.IndexOf(Settings.Instance.convertFrom);
-        convertFrom_drop.onValueChanged.AddListener(delegate {
-            Settings.Instance.convertFrom = dropStrings[convertFrom_drop.value];
+        ui.convertFrom_drop.AddOptions(ui.dropStrings);
+        ui.convertFrom_drop.value = ui.dropStrings.IndexOf(Settings.Instance.convertFrom);
+        ui.convertFrom_drop.onValueChanged.AddListener(delegate {
+            Settings.Instance.convertFrom = ui.dropStrings[ui.convertFrom_drop.value];
             FindStaticvalue();
             ConvertValue();
         });
 
-        convertTo_drop.AddOptions(dropStrings);
-        convertTo_drop.value = dropStrings.IndexOf(Settings.Instance.convertTo);
-        convertTo_drop.onValueChanged.AddListener(delegate
+        ui.convertTo_drop.AddOptions(ui.dropStrings);
+        ui.convertTo_drop.value = ui.dropStrings.IndexOf(Settings.Instance.convertTo);
+        ui.convertTo_drop.onValueChanged.AddListener(delegate
         {
-            Settings.Instance.convertTo = dropStrings[convertTo_drop.value];
+            Settings.Instance.convertTo = ui.dropStrings[ui.convertTo_drop.value];
             FindStaticvalue();
             ConvertValue();
         });
 
         if (Settings.Instance.inputLayer)
         {
-            ClassicInput.SetActive(true);
-            SliderInput.SetActive(false);
+            ui.ClassicInput.SetActive(true);
+            ui.SliderInput.SetActive(false);
 
-            inputValue.text = Settings.Instance.inputValue;
-            if (inputValue.text != "")
+            ui.inputValue.text = Settings.Instance.inputValue;
+            if (ui.inputValue.text != "")
                 ConvertValue();
         }
         else
         {
-            ClassicInput.SetActive(false);
-            SliderInput.SetActive(true);
+            ui.ClassicInput.SetActive(false);
+            ui.SliderInput.SetActive(true);
 
             SetSliderInput();
             OnSliderChange();
@@ -74,13 +58,12 @@ public class Calculations : MonoBehaviour
         FindStaticvalue();
     }
 
-
     public void SetSliderInput()
     {
-        slidersForInput.Clear();
+        ui.slidersForInput.Clear();
         try
         {
-            foreach (Transform child in SliderInput.transform)
+            foreach (Transform child in ui.SliderInput.transform)
             {
                 Destroy(child.gameObject);
             }
@@ -90,13 +73,13 @@ public class Calculations : MonoBehaviour
             Debug.LogError("No child found");
         }
 
-        if (slidersForInput.Count < Settings.Instance.sliderNumbersQ + Settings.Instance.decimalSlider)
+        if (ui.slidersForInput.Count < Settings.Instance.sliderNumbersQ + Settings.Instance.decimalSlider)
         {
             for (int i = 0; i < (Settings.Instance.sliderNumbersQ + Settings.Instance.decimalSlider); i++)
             {
-                GameObject slider_temp = Instantiate(sampleSliderInput, sampleSliderInput.transform.position, Quaternion.identity, SliderInput.transform);
+                GameObject slider_temp = Instantiate(ui.sampleSliderInput, ui.sampleSliderInput.transform.position, Quaternion.identity, ui.SliderInput.transform);
                 slider_temp.name = "slider_temp"; //присваиваем имя
-                slidersForInput.Add(slider_temp);
+                ui.slidersForInput.Add(slider_temp);
             }
         }
 
@@ -108,14 +91,14 @@ public class Calculations : MonoBehaviour
             {
                 for (int i = 0; i < characters.Length; i++)
                 {
-                    slidersForInput[i].GetComponentInChildren<TMP_Text>().text = Convert.ToString(characters[i]);
+                    ui.slidersForInput[i].GetComponentInChildren<TMP_Text>().text = Convert.ToString(characters[i]);
                 }
             }
             else
             {
                 for (int i = 0; i < (Settings.Instance.sliderNumbersQ + Settings.Instance.decimalSlider); i++)
                 {
-                    slidersForInput[i].GetComponentInChildren<TMP_Text>().text = Convert.ToString(characters[i]);
+                    ui.slidersForInput[i].GetComponentInChildren<TMP_Text>().text = Convert.ToString(characters[i]);
                 }
             }
         }
@@ -126,8 +109,8 @@ public class Calculations : MonoBehaviour
     {
         if (Settings.Instance.sliderNumbersQ < 5 && Settings.Instance.decimalSlider > 0)
         {
-            TMP_Text number = slidersForInput[Settings.Instance.sliderNumbersQ - 1].transform.Find("firstNumber").GetComponent<TMP_Text>();
-            TMP_Text decimal_t = slidersForInput[Settings.Instance.sliderNumbersQ - 1].transform.Find("decimal").GetComponent<TMP_Text>();
+            TMP_Text number = ui.slidersForInput[Settings.Instance.sliderNumbersQ - 1].transform.Find("firstNumber").GetComponent<TMP_Text>();
+            TMP_Text decimal_t = ui.slidersForInput[Settings.Instance.sliderNumbersQ - 1].transform.Find("decimal").GetComponent<TMP_Text>();
 
             while(number.fontSize == 18f)
             {
@@ -136,17 +119,16 @@ public class Calculations : MonoBehaviour
             decimal_t.fontSize = number.fontSize;
 
             RectTransform rt = decimal_t.GetComponent<RectTransform>();
-            rt.localPosition += new Vector3(slidersForInput[Settings.Instance.sliderNumbersQ - 1].GetComponent<RectTransform>().rect.width/2,0,0);
+            rt.localPosition += new Vector3(ui.slidersForInput[Settings.Instance.sliderNumbersQ - 1].GetComponent<RectTransform>().rect.width/2,0,0);
         }
     }
-
 
     public void OnSliderChange()
     {
         string temp = "";
-        for (int i = 0; i < slidersForInput.Count; i++)
+        for (int i = 0; i < ui.slidersForInput.Count; i++)
         {
-            temp += slidersForInput[i].GetComponentInChildren<TMP_Text>().text;
+            temp += ui.slidersForInput[i].GetComponentInChildren<TMP_Text>().text;
         }
 
         try
@@ -170,15 +152,15 @@ public class Calculations : MonoBehaviour
         }
         else
         {
-            resultText.text = "Enter valid data";
+            ui.resultText.text = "Enter valid data";
         }
     }
 
     public void ChangeFromTo()
     {
         string tempFrom = Settings.Instance.convertFrom;
-        convertFrom_drop.value = dropStrings.IndexOf(Settings.Instance.convertTo);
-        convertTo_drop.value = dropStrings.IndexOf(tempFrom);
+        ui.convertFrom_drop.value = ui.dropStrings.IndexOf(Settings.Instance.convertTo);
+        ui.convertTo_drop.value = ui.dropStrings.IndexOf(tempFrom);
     }
 
     private void FillFormulas()
@@ -221,19 +203,19 @@ public class Calculations : MonoBehaviour
     {        
         try
         {
-            doubleInput = Convert.ToDouble(inputValue.text);            
+            doubleInput = Convert.ToDouble(ui.inputValue.text);            
         }
         catch
         {
-            inputValue.text = inputValue.text.Replace('.', ',');
+            ui.inputValue.text = ui.inputValue.text.Replace('.', ',');
             try
             {
-                doubleInput = Convert.ToDouble(inputValue.text);
+                doubleInput = Convert.ToDouble(ui.inputValue.text);
             }
             catch
             {
                 doubleInput = 0;
-                inputValue.text = "";
+                ui.inputValue.text = "";
             }
         }
         if (doubleInput != 0)
@@ -243,7 +225,7 @@ public class Calculations : MonoBehaviour
         }
         else
         {
-            resultText.text = "Enter valid data";
+            ui.resultText.text = "Enter valid data";
         }
     }
 
@@ -261,11 +243,11 @@ public class Calculations : MonoBehaviour
         }
         
         string result = value.ToString();
-        resultText.text = result;
+        ui.resultText.text = result;
 
         if (Settings.Instance.inputLayer)
         {
-            Settings.Instance.inputValue = inputValue.text;
+            Settings.Instance.inputValue = ui.inputValue.text;
         }
     }
 
@@ -278,26 +260,34 @@ public class Calculations : MonoBehaviour
 
     public void ToSettings()
     {
-        SettingsLayer.SetActive(true);
-        ValueLayer.SetActive(false);
+        ui.SettingsLayer.SetActive(true);
+        StartCoroutine(SetPaddingRight());        
+        ui.ValueLayer.SetActive(false);
+    }
+
+    public IEnumerator SetPaddingRight()
+    {
+        yield return new WaitForEndOfFrame();
+        ui.language_drop_fieldName.transform.localPosition = new Vector3(ui.language_drop_fieldName.transform.localPosition.x + (ui.language_drop_fieldName.gameObject.GetComponent<RectTransform>().rect.width / 2), ui.language_drop_fieldName.transform.localPosition.y, ui.language_drop_fieldName.transform.localPosition.z);
+
     }
 
     public void BackToInput()
     {
-        ValueLayer.SetActive(true);
-        SettingsLayer.SetActive(false);
+        ui.ValueLayer.SetActive(true);
+        ui.SettingsLayer.SetActive(false);
 
         if (Settings.Instance.inputLayer)
         {
-            ClassicInput.SetActive(true);
-            SliderInput.SetActive(false);
+            ui.ClassicInput.SetActive(true);
+            ui.SliderInput.SetActive(false);
 
-            inputValue.text = Settings.Instance.inputValue;
+            ui.inputValue.text = Settings.Instance.inputValue;
         }
         else
         {
-            ClassicInput.SetActive(false);
-            SliderInput.SetActive(true);
+            ui.ClassicInput.SetActive(false);
+            ui.SliderInput.SetActive(true);
 
             SetSliderInput();
             OnSliderChange();

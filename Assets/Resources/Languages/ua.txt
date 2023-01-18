@@ -1,11 +1,12 @@
-enter_value:Введите данные
-change:Поменять местами
-settings:Настройки
-back:Назад
-decimal:Знаков после запятой
-decimal_slider:Знаков после запятой в слайдере
-slider_number:Знаков для ввода в слайдере
-classic:Стандартный ввод
-invert_slider:Инвертировать слайдер
-save:Сохранить результаты
-list:Список сохр. результатов
+enter_value-Введіть дані:
+from-З:
+to-У:
+result-Результат:
+settings-Налаштування
+language-Мова:
+back-Назад
+decimal-Знаків після коми
+decimal_slider-Десяткові дроби у слайдері
+slider_number-Цифр для введення у слайдері
+classic-Класичне введення
+invert_slider-Інвертувати введення слайдером

@@ -7,6 +7,7 @@ using System;
 using TMPro;
 using UnityEngine.Audio;
 using System.Runtime.CompilerServices;
+using System.Diagnostics;
 
 public class Settings : MonoBehaviour
 {
@@ -25,25 +26,13 @@ public class Settings : MonoBehaviour
     public bool inputLayer; //выбор режима ввода данных, если тру то поле для ввода, если фелс то слайдер
     public bool invertInputSlider; //когда тру инвертируем слайдер для ввода цифр
 
-    public TMP_Dropdown language_drop;
-    public Slider decimalPlaces_slider;
-    public Slider decimalSlider_slider;
-    public Slider sliderNumbersQ_slider;
-    public Toggle Toggle_inputLayer;
-    public Toggle Toggle_invertInputSlider;
+    public UI ui; //скрипт уи
 
-    public GameObject SettingsLayer;
-    public GameObject ValueLayer;
-    public GameObject SliderSettingsHide;
-
-    public GameObject ClassicInput;
-    public GameObject SliderInput;
-
-    [SerializeField]
-    string[] myLangs; //список языков   
+    public string[] myLangs; //список языков   
 
     private void Awake() //запускается до всех стартов
     {
+        ui = FindObjectOfType<UI>();
         if (Instance == null) //если объекта ещё нет
         {
             Instance = this; //говорим что вот кагбе он
@@ -54,86 +43,6 @@ public class Settings : MonoBehaviour
             Destroy(gameObject); //то ломаем его к херам
         }
         Input.multiTouchEnabled = false;
-    }
-
-    void Start()
-    {
-        language_drop.value = Array.IndexOf(myLangs, language);
-        decimalPlaces_slider.value = decimalPlaces;
-        decimalSlider_slider.value = decimalSlider;
-        sliderNumbersQ_slider.value = sliderNumbersQ;
-        Toggle_inputLayer.isOn = inputLayer;
-        Toggle_invertInputSlider.isOn = invertInputSlider;
-
-        if (inputLayer)
-        {
-            SliderSettingsHide.SetActive(false);
-        }
-        else
-        {
-            SliderSettingsHide.SetActive(true);
-        }
-
-        language_drop.onValueChanged.AddListener(delegate { //ставим его в дропдовн меню
-        language = myLangs[language_drop.value];
-        ApplyLanguageChanges(); //применяем настройки смены языка при выборе другого
-        });        
-    }
-
-    void ApplyLanguageChanges() //применяем настройки смены языка при выборе другого
-    {
-        SaveSystem.Instance.SettingsSave(); //сохраняем настройки с новым языком
-        string lvl = SceneManager.GetActiveScene().name; //получаем имя активной сцены
-        SceneManager.LoadScene(lvl); //и загружаем ее заново
-    }
-
-    public void ChangeDecimalPlaces()
-    {
-        decimalPlaces = Convert.ToInt32(decimalPlaces_slider.value);
-        SaveSystem.Instance.SettingsSave(); //сохраняем настройки с новым языком
-    }
-
-    public void ChangeDecimalSlider()
-    {
-        decimalSlider = Convert.ToInt32(decimalSlider_slider.value);
-
-        if((decimalSlider + sliderNumbersQ) > 5)
-        sliderNumbersQ_slider.value = 5 - decimalSlider;
-
-        SaveSystem.Instance.SettingsSave(); //сохраняем настройки с новым языком
-    }
-
-    public void ChangeNumberQSlider()
-    {
-        sliderNumbersQ = Convert.ToInt32(sliderNumbersQ_slider.value);
-
-        if ((decimalSlider + sliderNumbersQ) > 5)
-        decimalSlider_slider.value = 5 - sliderNumbersQ;
-
-        SaveSystem.Instance.SettingsSave(); //сохраняем настройки с новым языком
-    }
-
-    public void ChangeInvertInputSlider()
-    {
-        invertInputSlider = Toggle_invertInputSlider.isOn;
-
-        SaveSystem.Instance.SettingsSave();
-    }
-
-    public void ChangeInputLayer()
-    {
-        inputLayer = Toggle_inputLayer.isOn;
-
-        if(inputLayer)
-        {
-            SliderSettingsHide.SetActive(false);
-        }
-        else
-        {
-            SliderSettingsHide.SetActive(true);
-        }
-
-        SaveSystem.Instance.SettingsSave();
     }
 
 #if UNITY_ANDROID || UNITY_EDITOR

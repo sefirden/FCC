@@ -48,11 +48,11 @@ public class SaveSystem : MonoBehaviour
         //тут весь текст делим на ключ и фразу, способ из гайдов, лучше не трогать пока работает)
         for (int i = 0; i < lines.Length; i++)
         {
-            if (lines[i].IndexOf(":") >= 0 && !lines[i].StartsWith("#"))
+            if (lines[i].IndexOf("-") >= 0 && !lines[i].StartsWith("#"))
             {
-                key = lines[i].Substring(0, lines[i].IndexOf(":"));
-                value = lines[i].Substring(lines[i].IndexOf(":") + 1,
-                    lines[i].Length - lines[i].IndexOf(":") - 1).Replace("\\n", Environment.NewLine);
+                key = lines[i].Substring(0, lines[i].IndexOf("-"));
+                value = lines[i].Substring(lines[i].IndexOf("-") + 1,
+                    lines[i].Length - lines[i].IndexOf("-") - 1).Replace("\\n", Environment.NewLine);
                 Language.Add(key, value);
             }
         }
