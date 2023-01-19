@@ -12,12 +12,14 @@ public class Calculations : MonoBehaviour
 {
     double doubleInput;
     public double staticvalue;
+    private bool languageLabel;
     private UI ui; //скрипт уи
     private List<FormulaList> formulas;
 
     private void Awake() //запускается до всех стартов
     {
         ui = FindObjectOfType<UI>();
+        languageLabel = true;
         FillFormulas();
 
         ui.convertFrom_drop.AddOptions(ui.dropStrings);
@@ -221,7 +223,6 @@ public class Calculations : MonoBehaviour
         if (doubleInput != 0)
         {
             ConvertValue();
-
         }
         else
         {
@@ -261,15 +262,18 @@ public class Calculations : MonoBehaviour
     public void ToSettings()
     {
         ui.SettingsLayer.SetActive(true);
-        StartCoroutine(SetPaddingRight());        
+        if (languageLabel)
+        { 
+            StartCoroutine(SetPaddingRight());
+        }
         ui.ValueLayer.SetActive(false);
     }
 
     public IEnumerator SetPaddingRight()
     {
-        yield return new WaitForEndOfFrame();
+        yield return new WaitForFixedUpdate();
         ui.language_drop_fieldName.transform.localPosition = new Vector3(ui.language_drop_fieldName.transform.localPosition.x + (ui.language_drop_fieldName.gameObject.GetComponent<RectTransform>().rect.width / 2), ui.language_drop_fieldName.transform.localPosition.y, ui.language_drop_fieldName.transform.localPosition.z);
-
+        languageLabel = false;
     }
 
     public void BackToInput()

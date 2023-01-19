@@ -105,72 +105,120 @@ public class SwipeDetection : MonoBehaviour
     {
         if(Vector2.Dot(Vector2.up, direction) > directionTreshold)
         {
-            if (Settings.Instance.invertInputSlider)
-                NumberMinus();
-            else
-                StartCoroutine(NumberPlus());
+            StartCoroutine(NumberPlus());
         }
         else if (Vector2.Dot(Vector2.down, direction) > directionTreshold)
         {
-            if (Settings.Instance.invertInputSlider)
-                StartCoroutine(NumberPlus());
-            else
-                NumberMinus();
+            StartCoroutine(NumberMinus());
         }
     }
 
     private IEnumerator NumberPlus()
-    {/*
-        float step; 
-        float moveTime = 0;
-        float speed = 1f;
+    {
         TMP_Text tempText = tempGameObject.GetComponent<TMP_Text>();
         float startPosition = tempText.GetComponent<RectTransform>().rect.top;
         float endPosition = (170 - tempText.fontSize - 10);
 
+        //двигаем вверх
         tempText.GetComponent<RectTransform>().offsetMax = new Vector2(tempText.GetComponent<RectTransform>().offsetMax.x, endPosition);
         tempText.GetComponent<RectTransform>().offsetMin = new Vector2(tempText.GetComponent<RectTransform>().offsetMin.x, endPosition);
-        yield return new WaitForFixedUpdate();*/
-        /*Vector3 startPosition = tempText.transform.position;
-        Vector3 endPosition = new Vector3(tempText.transform.position.x + 10f, tempText.transform.position.y, tempText.transform.position.z); //вектор3 стартовой и конечной позиции оружия
+        yield return new WaitForFixedUpdate();
 
-        step = (speed / (startPosition - endPosition).magnitude) * Time.fixedDeltaTime; //считаем количество шагов
-        //ниже формула для плавного движения
-        while (moveTime <= 1.0f )
-        {
-            moveTime += step;
-            tempText.transform.position = Vector3.Lerp(startPosition, endPosition, moveTime);
-            yield return new WaitForFixedUpdate();
-        }
-        yield return new WaitForFixedUpdate();*/
-
-                int currentNumber = Convert.ToInt32(tempGameObject.GetComponent<TMP_Text>().text);
-                if(currentNumber == 9)
-                {
-                    currentNumber = 0;
-                }
-                else
-                {
-                    currentNumber += 1;
-                }
-                tempGameObject.GetComponent<TMP_Text>().text = Convert.ToString(currentNumber);
-                calculations.OnSliderChange();
-
-                yield return new WaitForFixedUpdate(); //убрать
-    }
-
-    private void NumberMinus()
-    {
         int currentNumber = Convert.ToInt32(tempGameObject.GetComponent<TMP_Text>().text);
-        if (currentNumber == 0)
+        tempGameObject.GetComponent<TMP_Text>().text = "";
+        yield return new WaitForFixedUpdate();
+
+        //двигаем вниз
+        tempText.GetComponent<RectTransform>().offsetMax = new Vector2(tempText.GetComponent<RectTransform>().offsetMax.x, -endPosition);
+        tempText.GetComponent<RectTransform>().offsetMin = new Vector2(tempText.GetComponent<RectTransform>().offsetMin.x, -endPosition);
+        yield return new WaitForFixedUpdate();
+
+        if (Settings.Instance.invertInputSlider)
         {
-            currentNumber = 9;
+            if (currentNumber == 0)
+            {
+                currentNumber = 9;
+            }
+            else
+            {
+                currentNumber -= 1;
+            }
         }
         else
         {
-            currentNumber -= 1;
+            if (currentNumber == 9)
+            {
+                currentNumber = 0;
+            }
+            else
+            {
+                currentNumber += 1;
+            }
         }
+        yield return new WaitForFixedUpdate();
+
         tempGameObject.GetComponent<TMP_Text>().text = Convert.ToString(currentNumber);
         calculations.OnSliderChange();
+        yield return new WaitForFixedUpdate();
+
+        //двигаем вверх
+        tempText.GetComponent<RectTransform>().offsetMax = new Vector2(tempText.GetComponent<RectTransform>().offsetMax.x, -5);
+        tempText.GetComponent<RectTransform>().offsetMin = new Vector2(tempText.GetComponent<RectTransform>().offsetMin.x, 5);
+        yield return new WaitForFixedUpdate();
+    }
+
+    private IEnumerator NumberMinus()
+    {
+        TMP_Text tempText = tempGameObject.GetComponent<TMP_Text>();
+        float startPosition = tempText.GetComponent<RectTransform>().rect.top;
+        float endPosition = (170 - tempText.fontSize - 10);
+
+        //двигаем вниз
+        tempText.GetComponent<RectTransform>().offsetMax = new Vector2(tempText.GetComponent<RectTransform>().offsetMax.x, -endPosition);
+        tempText.GetComponent<RectTransform>().offsetMin = new Vector2(tempText.GetComponent<RectTransform>().offsetMin.x, -endPosition);
+        yield return new WaitForFixedUpdate();
+
+        int currentNumber = Convert.ToInt32(tempGameObject.GetComponent<TMP_Text>().text);
+        tempGameObject.GetComponent<TMP_Text>().text = "";
+        yield return new WaitForFixedUpdate();
+
+        //двигаем вверх
+        tempText.GetComponent<RectTransform>().offsetMax = new Vector2(tempText.GetComponent<RectTransform>().offsetMax.x, endPosition);
+        tempText.GetComponent<RectTransform>().offsetMin = new Vector2(tempText.GetComponent<RectTransform>().offsetMin.x, endPosition);
+        yield return new WaitForFixedUpdate();
+
+        if (Settings.Instance.invertInputSlider)
+        {
+            if (currentNumber == 9)
+            {
+                currentNumber = 0;
+            }
+            else
+            {
+                currentNumber += 1;
+            }
+        }
+        else
+        {
+            if (currentNumber == 0)
+            {
+                currentNumber = 9;
+            }
+            else
+            {
+                currentNumber -= 1;
+            }
+
+        }
+        yield return new WaitForFixedUpdate();
+
+        tempGameObject.GetComponent<TMP_Text>().text = Convert.ToString(currentNumber);
+        calculations.OnSliderChange();
+        yield return new WaitForFixedUpdate();
+
+        //двигаем вверх
+        tempText.GetComponent<RectTransform>().offsetMax = new Vector2(tempText.GetComponent<RectTransform>().offsetMax.x, -5);
+        tempText.GetComponent<RectTransform>().offsetMin = new Vector2(tempText.GetComponent<RectTransform>().offsetMin.x, 5);
+        yield return new WaitForFixedUpdate();
     }
 }
