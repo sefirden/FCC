@@ -63,6 +63,7 @@
     <Compile Include="Assets\Scripts\SaveSystem.cs" />
     <Compile Include="Assets\Scripts\SwipeDetection.cs" />
     <Compile Include="Assets\Scripts\LabelPosition.cs" />
+    <Compile Include="Assets\Scripts\SetColor.cs" />
     <Compile Include="Assets\Scripts\SetText.cs" />
     <Compile Include="Assets\Scripts\SwipeControls.cs" />
     <Compile Include="Assets\Scripts\DataList.cs" />

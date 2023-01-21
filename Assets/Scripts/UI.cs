@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -30,6 +31,7 @@ public class UI : MonoBehaviour
 
     //settings layer
     public TMP_Dropdown language_drop;
+    public TMP_Dropdown color_drop;
     public LabelPosition language_drop_fieldName;
     public Slider decimalPlaces_slider;
     public Slider decimalSlider_slider;
@@ -52,7 +54,7 @@ public class UI : MonoBehaviour
     private void Awake()
     {
         Settings.Instance.ui = FindObjectOfType<UI>();
-
+        
         SuperWidth = ValueLayer.GetComponent<RectTransform>().rect.width;
         SetWidth();
 
@@ -70,24 +72,24 @@ public class UI : MonoBehaviour
         if (Settings.Instance.invertInputSlider)
         {
             ToggleInvertInputImage.sprite = SpriteToggle[1];
-            ToggleInvertInputImage.color = ColorSwap[1];
+            ToggleInvertInputImage.color = ColorSwap[Settings.Instance.themeColor]; 
         }
         else
         {
             ToggleInvertInputImage.sprite = SpriteToggle[0];
-            ToggleInvertInputImage.color = ColorSwap[0];
+            ToggleInvertInputImage.color = new Color(0.5019608f, 0.5019608f, 0.5019608f);
         }
 
         if (Settings.Instance.inputLayer)
         {
             ToggleInputImage.sprite = SpriteToggle[1];
-            ToggleInputImage.color = ColorSwap[1];
+            ToggleInputImage.color = ColorSwap[Settings.Instance.themeColor];
             SliderSettingsHide.SetActive(false);
         }
         else
         {
             ToggleInputImage.sprite = SpriteToggle[0];
-            ToggleInputImage.color = ColorSwap[0];
+            ToggleInputImage.color = new Color(0.5019608f, 0.5019608f, 0.5019608f);
             SliderSettingsHide.SetActive(true);
         }
         
@@ -132,13 +134,13 @@ public class UI : MonoBehaviour
         if (Settings.Instance.inputLayer)
         {
             ToggleInputImage.sprite = SpriteToggle[1];
-            ToggleInputImage.color = ColorSwap[1];
+            ToggleInputImage.color = ColorSwap[Settings.Instance.themeColor];
             SliderSettingsHide.SetActive(false);
         }
         else
         {
             ToggleInputImage.sprite = SpriteToggle[0];
-            ToggleInputImage.color = ColorSwap[0];
+            ToggleInputImage.color = new Color(0.5019608f, 0.5019608f, 0.5019608f);
             SliderSettingsHide.SetActive(true);
         }
 
@@ -176,12 +178,12 @@ public class UI : MonoBehaviour
         if (Settings.Instance.invertInputSlider)
         {
             ToggleInvertInputImage.sprite = SpriteToggle[1];
-            ToggleInvertInputImage.color = ColorSwap[1];
+            ToggleInvertInputImage.color = ColorSwap[Settings.Instance.themeColor];
         }
         else
         {
             ToggleInvertInputImage.sprite = SpriteToggle[0];
-            ToggleInvertInputImage.color = ColorSwap[0];
+            ToggleInvertInputImage.color = new Color(0.5019608f, 0.5019608f, 0.5019608f);
         }
 
         SaveSystem.Instance.SettingsSave();

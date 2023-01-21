@@ -28,6 +28,8 @@ public class SwipeDetection : MonoBehaviour
     private Vector2 endPosition;
     private float endTime;
 
+    public float WaitForSeconds;
+
     private void Awake()
     {
         inputManager = InputManager.Instance;
@@ -122,16 +124,16 @@ public class SwipeDetection : MonoBehaviour
         //двигаем вверх
         tempText.GetComponent<RectTransform>().offsetMax = new Vector2(tempText.GetComponent<RectTransform>().offsetMax.x, endPosition);
         tempText.GetComponent<RectTransform>().offsetMin = new Vector2(tempText.GetComponent<RectTransform>().offsetMin.x, endPosition);
-        yield return new WaitForFixedUpdate();
+        yield return new WaitForSecondsRealtime(WaitForSeconds);
 
         int currentNumber = Convert.ToInt32(tempGameObject.GetComponent<TMP_Text>().text);
         tempGameObject.GetComponent<TMP_Text>().text = "";
-        yield return new WaitForFixedUpdate();
+        yield return new WaitForSecondsRealtime(WaitForSeconds);
 
         //двигаем вниз
         tempText.GetComponent<RectTransform>().offsetMax = new Vector2(tempText.GetComponent<RectTransform>().offsetMax.x, -endPosition);
         tempText.GetComponent<RectTransform>().offsetMin = new Vector2(tempText.GetComponent<RectTransform>().offsetMin.x, -endPosition);
-        yield return new WaitForFixedUpdate();
+        yield return new WaitForSecondsRealtime(WaitForSeconds);
 
         if (Settings.Instance.invertInputSlider)
         {
@@ -155,16 +157,16 @@ public class SwipeDetection : MonoBehaviour
                 currentNumber += 1;
             }
         }
-        yield return new WaitForFixedUpdate();
+        yield return new WaitForSecondsRealtime(WaitForSeconds);
 
         tempGameObject.GetComponent<TMP_Text>().text = Convert.ToString(currentNumber);
         calculations.OnSliderChange();
-        yield return new WaitForFixedUpdate();
+        yield return new WaitForSecondsRealtime(WaitForSeconds);
 
         //двигаем вверх
         tempText.GetComponent<RectTransform>().offsetMax = new Vector2(tempText.GetComponent<RectTransform>().offsetMax.x, -5);
         tempText.GetComponent<RectTransform>().offsetMin = new Vector2(tempText.GetComponent<RectTransform>().offsetMin.x, 5);
-        yield return new WaitForFixedUpdate();
+        yield return new WaitForSecondsRealtime(WaitForSeconds);
     }
 
     private IEnumerator NumberMinus()
@@ -176,16 +178,16 @@ public class SwipeDetection : MonoBehaviour
         //двигаем вниз
         tempText.GetComponent<RectTransform>().offsetMax = new Vector2(tempText.GetComponent<RectTransform>().offsetMax.x, -endPosition);
         tempText.GetComponent<RectTransform>().offsetMin = new Vector2(tempText.GetComponent<RectTransform>().offsetMin.x, -endPosition);
-        yield return new WaitForFixedUpdate();
+        yield return new WaitForSecondsRealtime(WaitForSeconds);
 
         int currentNumber = Convert.ToInt32(tempGameObject.GetComponent<TMP_Text>().text);
         tempGameObject.GetComponent<TMP_Text>().text = "";
-        yield return new WaitForFixedUpdate();
+        yield return new WaitForSecondsRealtime(WaitForSeconds);
 
         //двигаем вверх
         tempText.GetComponent<RectTransform>().offsetMax = new Vector2(tempText.GetComponent<RectTransform>().offsetMax.x, endPosition);
         tempText.GetComponent<RectTransform>().offsetMin = new Vector2(tempText.GetComponent<RectTransform>().offsetMin.x, endPosition);
-        yield return new WaitForFixedUpdate();
+        yield return new WaitForSecondsRealtime(WaitForSeconds);
 
         if (Settings.Instance.invertInputSlider)
         {
@@ -210,15 +212,15 @@ public class SwipeDetection : MonoBehaviour
             }
 
         }
-        yield return new WaitForFixedUpdate();
+        yield return new WaitForSecondsRealtime(WaitForSeconds);
 
         tempGameObject.GetComponent<TMP_Text>().text = Convert.ToString(currentNumber);
         calculations.OnSliderChange();
-        yield return new WaitForFixedUpdate();
+        yield return new WaitForSecondsRealtime(WaitForSeconds);
 
         //двигаем вверх
         tempText.GetComponent<RectTransform>().offsetMax = new Vector2(tempText.GetComponent<RectTransform>().offsetMax.x, -5);
         tempText.GetComponent<RectTransform>().offsetMin = new Vector2(tempText.GetComponent<RectTransform>().offsetMin.x, 5);
-        yield return new WaitForFixedUpdate();
+        yield return new WaitForSecondsRealtime(WaitForSeconds);
     }
 }

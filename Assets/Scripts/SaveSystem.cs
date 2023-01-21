@@ -91,6 +91,7 @@ public class SaveSystem : MonoBehaviour
             Settings.Instance.sliderNumbersQ = settings.sliderNumbersQ;
             Settings.Instance.inputLayer = settings.inputLayer;
             Settings.Instance.invertInputSlider = settings.invertInputSlider;
+            Settings.Instance.themeColor = settings.themeColor;
 
 
             LoadLanguage(settings.language); //загружаем язык
@@ -107,6 +108,7 @@ public class SaveSystem : MonoBehaviour
             Settings.Instance.sliderNumbersQ = 2;
             Settings.Instance.inputLayer = false;
             Settings.Instance.invertInputSlider = false;
+            Settings.Instance.themeColor = 0;
 
             LoadLanguage("en"); //по умолчанию английский язык
             Debug.Log("SettingsDefault");
@@ -131,6 +133,7 @@ public class SaveSystem : MonoBehaviour
         settings.sliderNumbersQ = Settings.Instance.sliderNumbersQ;
         settings.inputLayer = Settings.Instance.inputLayer;
         settings.invertInputSlider = Settings.Instance.invertInputSlider;
+        settings.themeColor = Settings.Instance.themeColor;
 
         File.WriteAllText(path, JsonUtility.ToJson(settings)); //берем все и записываем в жсон
     }
@@ -159,4 +162,5 @@ public class SettingsSaves //класс с настройками, нужен для сохранения
     public int sliderNumbersQ; //количество всего слайдеров для выбора цифр
     public bool inputLayer; //выбор режима ввода данных, если тру то поле для ввода, если фелс то слайдер
     public bool invertInputSlider; //когда тру инвертируем слайдер для ввода цифр
+    public int themeColor;
 }

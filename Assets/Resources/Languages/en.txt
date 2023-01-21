@@ -10,3 +10,4 @@ decimal_slider-Decimals in slider
 slider_number-Numbers to enter in the slider
 classic-Classic input
 invert_slider-Invert slider input
+color-Interface color
