@@ -33,10 +33,13 @@ public class UI : MonoBehaviour
     public TMP_Dropdown language_drop;
     public TMP_Dropdown color_drop;
     public LabelPosition language_drop_fieldName;
+    public LabelPosition color_drop_fieldName;
     public Slider decimalPlaces_slider;
     public Slider decimalSlider_slider;
     public Slider sliderNumbersQ_slider;
     public GameObject SliderSettingsHide;
+
+    public GameObject tempSpriteWColor;
 
     public TMP_Text decimalPlaces_slider_value;
     public TMP_Text decimalSlider_slider_value;
@@ -59,6 +62,17 @@ public class UI : MonoBehaviour
         SetWidth();
 
         language_drop.value = Array.IndexOf(Settings.Instance.myLangs, Settings.Instance.language);
+
+        for(int i = 0; i< ColorSwap.Length; i++)
+        {
+            var texture = new Texture2D(1, 1); 
+            texture.SetPixel(0, 0, ColorSwap[i]);
+            texture.Apply();
+            var item = new TMP_Dropdown.OptionData(Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0, 0))); // creating dropdown item and converting texture to sprite
+            color_drop.options.Add(item);
+        }    
+        color_drop.value = Settings.Instance.themeColor;
+
         decimalPlaces_slider.value = Settings.Instance.decimalPlaces;
         decimalSlider_slider.value = Settings.Instance.decimalSlider;
         sliderNumbersQ_slider.value = Settings.Instance.sliderNumbersQ;
@@ -108,6 +122,11 @@ public class UI : MonoBehaviour
     {
         language_drop.onValueChanged.AddListener(delegate { //ставим его в дропдовн меню
             Settings.Instance.language = Settings.Instance.myLangs[language_drop.value];
+            ApplyLanguageChanges(); //применяем настройки смены языка при выборе другого
+        });
+
+        color_drop.onValueChanged.AddListener(delegate { //ставим его в дропдовн меню
+            Settings.Instance.themeColor = color_drop.value;
             ApplyLanguageChanges(); //применяем настройки смены языка при выборе другого
         });
 
