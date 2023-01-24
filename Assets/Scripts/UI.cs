@@ -38,20 +38,23 @@ public class UI : MonoBehaviour
     public Slider decimalSlider_slider;
     public Slider sliderNumbersQ_slider;
     public GameObject SliderSettingsHide;
-
-    public GameObject tempSpriteWColor;
+    public GameObject Spacing;
 
     public TMP_Text decimalPlaces_slider_value;
     public TMP_Text decimalSlider_slider_value;
     public TMP_Text sliderNumbersQ_slider_value;
 
+
     public Toggle Toggle_inputLayer;
     public Toggle Toggle_invertInputSlider;
+    public Toggle Toggle_darkMode;
 
     public Sprite[] SpriteToggle;
     public Image ToggleInputImage;
     public Image ToggleInvertInputImage;
+    public Image ToggledarkModeImage;
     public Color[] ColorSwap;
+    public Color[] DarkModeColors;
     public float SuperWidth;
 
     private void Awake()
@@ -80,33 +83,74 @@ public class UI : MonoBehaviour
         decimalSlider_slider_value.text = Convert.ToString(Settings.Instance.decimalSlider);
         sliderNumbersQ_slider_value.text = Convert.ToString(Settings.Instance.sliderNumbersQ);
 
+        Toggle_darkMode.isOn = Settings.Instance.darkMode;
         Toggle_inputLayer.isOn = Settings.Instance.inputLayer;
         Toggle_invertInputSlider.isOn = Settings.Instance.invertInputSlider;
 
         if (Settings.Instance.invertInputSlider)
         {
             ToggleInvertInputImage.sprite = SpriteToggle[1];
-            ToggleInvertInputImage.color = ColorSwap[Settings.Instance.themeColor]; 
+            if(Settings.Instance.darkMode)
+                ToggleInvertInputImage.color = DarkModeColors[1];
+            else
+                ToggleInvertInputImage.color = ColorSwap[Settings.Instance.themeColor]; 
         }
         else
         {
             ToggleInvertInputImage.sprite = SpriteToggle[0];
-            ToggleInvertInputImage.color = new Color(0.5019608f, 0.5019608f, 0.5019608f);
+            if (Settings.Instance.darkMode)
+                ToggleInvertInputImage.color = DarkModeColors[1];
+            else
+                ToggleInvertInputImage.color = new Color(0.5019608f, 0.5019608f, 0.5019608f);
         }
 
         if (Settings.Instance.inputLayer)
         {
             ToggleInputImage.sprite = SpriteToggle[1];
-            ToggleInputImage.color = ColorSwap[Settings.Instance.themeColor];
+
+            if (Settings.Instance.darkMode)
+                ToggleInputImage.color = DarkModeColors[1];
+            else
+                ToggleInputImage.color = ColorSwap[Settings.Instance.themeColor];
+
             SliderSettingsHide.SetActive(false);
         }
         else
         {
             ToggleInputImage.sprite = SpriteToggle[0];
-            ToggleInputImage.color = new Color(0.5019608f, 0.5019608f, 0.5019608f);
+
+            if (Settings.Instance.darkMode)
+                ToggleInputImage.color = DarkModeColors[1];
+            else
+                ToggleInputImage.color = new Color(0.5019608f, 0.5019608f, 0.5019608f);
+
             SliderSettingsHide.SetActive(true);
         }
         
+        if (Settings.Instance.darkMode)
+        {
+            ToggledarkModeImage.sprite = SpriteToggle[1];
+
+            if (Settings.Instance.darkMode)
+                ToggledarkModeImage.color = DarkModeColors[1];
+            else
+                ToggledarkModeImage.color = ColorSwap[Settings.Instance.themeColor];
+
+            color_drop.gameObject.SetActive(false);
+            Spacing.SetActive(false);
+        }
+        else
+        {
+            ToggledarkModeImage.sprite = SpriteToggle[0];
+
+            if (Settings.Instance.darkMode)
+                ToggledarkModeImage.color = DarkModeColors[1];
+            else
+                ToggledarkModeImage.color = new Color(0.5019608f, 0.5019608f, 0.5019608f);
+            color_drop.gameObject.SetActive(true);
+            Spacing.SetActive(true);
+        }
+
     }
 
     private void SetWidth()
@@ -128,6 +172,12 @@ public class UI : MonoBehaviour
         color_drop.onValueChanged.AddListener(delegate { //ставим его в дропдовн меню
             Settings.Instance.themeColor = color_drop.value;
             ApplyLanguageChanges(); //применяем настройки смены языка при выборе другого
+        });
+
+        Toggle_darkMode.onValueChanged.AddListener(delegate
+        {
+            Settings.Instance.darkMode = Toggle_darkMode.isOn;
+            ApplyLanguageChanges();
         });
 
     }
@@ -153,13 +203,23 @@ public class UI : MonoBehaviour
         if (Settings.Instance.inputLayer)
         {
             ToggleInputImage.sprite = SpriteToggle[1];
-            ToggleInputImage.color = ColorSwap[Settings.Instance.themeColor];
+
+            if (Settings.Instance.darkMode)
+                ToggleInputImage.color = DarkModeColors[1];
+            else
+                ToggleInputImage.color = ColorSwap[Settings.Instance.themeColor];
+
             SliderSettingsHide.SetActive(false);
         }
         else
         {
             ToggleInputImage.sprite = SpriteToggle[0];
-            ToggleInputImage.color = new Color(0.5019608f, 0.5019608f, 0.5019608f);
+
+            if (Settings.Instance.darkMode)
+                ToggleInputImage.color = DarkModeColors[1];
+            else
+                ToggleInputImage.color = new Color(0.5019608f, 0.5019608f, 0.5019608f);
+
             SliderSettingsHide.SetActive(true);
         }
 
@@ -197,14 +257,28 @@ public class UI : MonoBehaviour
         if (Settings.Instance.invertInputSlider)
         {
             ToggleInvertInputImage.sprite = SpriteToggle[1];
-            ToggleInvertInputImage.color = ColorSwap[Settings.Instance.themeColor];
+            if (Settings.Instance.darkMode)
+                ToggleInvertInputImage.color = DarkModeColors[1];
+            else
+                ToggleInvertInputImage.color = ColorSwap[Settings.Instance.themeColor];
         }
         else
         {
             ToggleInvertInputImage.sprite = SpriteToggle[0];
-            ToggleInvertInputImage.color = new Color(0.5019608f, 0.5019608f, 0.5019608f);
+            if (Settings.Instance.darkMode)
+                ToggleInvertInputImage.color = DarkModeColors[1];
+            else
+                ToggleInvertInputImage.color = new Color(0.5019608f, 0.5019608f, 0.5019608f);
         }
 
         SaveSystem.Instance.SettingsSave();
     }
+
+    /*public void DarkMode()
+    {
+        Settings.Instance.darkMode = Toggle_darkMode.isOn;
+        SaveSystem.Instance.SettingsSave(); //сохраняем настройки с новым языком
+        string lvl = SceneManager.GetActiveScene().name; //получаем имя активной сцены
+        //SceneManager.LoadScene(lvl); //и загружаем ее заново
+    }*/
 }

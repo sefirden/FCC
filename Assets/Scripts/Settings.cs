@@ -26,6 +26,7 @@ public class Settings : MonoBehaviour
     public bool inputLayer; //выбор режима ввода данных, если тру то поле для ввода, если фелс то слайдер
     public bool invertInputSlider; //когда тру инвертируем слайдер для ввода цифр
     public int themeColor;
+    public bool darkMode;
 
     public UI ui; //скрипт уи
 

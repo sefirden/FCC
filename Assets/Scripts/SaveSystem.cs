@@ -80,21 +80,43 @@ public class SaveSystem : MonoBehaviour
 #endif
         if (File.Exists(path)) //если файл сейва есть
         {
-            settings = JsonUtility.FromJson<SettingsSaves>(File.ReadAllText(path)); //грузим жсон из файла и применяем настройки
-            Settings.Instance.language = settings.language;
-            Settings.Instance.convertFrom = settings.convertFrom;
-            Settings.Instance.convertTo = settings.convertTo;
-            Settings.Instance.inputValue = settings.inputValue;
-            Settings.Instance.inputSliderValue = settings.inputSliderValue;
-            Settings.Instance.decimalPlaces = settings.decimalPlaces;
-            Settings.Instance.decimalSlider = settings.decimalSlider;
-            Settings.Instance.sliderNumbersQ = settings.sliderNumbersQ;
-            Settings.Instance.inputLayer = settings.inputLayer;
-            Settings.Instance.invertInputSlider = settings.invertInputSlider;
-            Settings.Instance.themeColor = settings.themeColor;
+            try
+            {
+                settings = JsonUtility.FromJson<SettingsSaves>(File.ReadAllText(path)); //грузим жсон из файла и применяем настройки
+                Settings.Instance.language = settings.language;
+                Settings.Instance.convertFrom = settings.convertFrom;
+                Settings.Instance.convertTo = settings.convertTo;
+                Settings.Instance.inputValue = settings.inputValue;
+                Settings.Instance.inputSliderValue = settings.inputSliderValue;
+                Settings.Instance.decimalPlaces = settings.decimalPlaces;
+                Settings.Instance.decimalSlider = settings.decimalSlider;
+                Settings.Instance.sliderNumbersQ = settings.sliderNumbersQ;
+                Settings.Instance.inputLayer = settings.inputLayer;
+                Settings.Instance.invertInputSlider = settings.invertInputSlider;
+                Settings.Instance.themeColor = settings.themeColor;
+                Settings.Instance.darkMode = settings.darkMode;
+                LoadLanguage(settings.language); //загружаем язык
+            }
+            catch
+            {
+                Settings.Instance.language = "en";
+                Settings.Instance.convertFrom = "mpg (US)";
+                Settings.Instance.convertTo = "l/100km";
+                Settings.Instance.inputValue = "25";
+                Settings.Instance.inputSliderValue = "25";
+                Settings.Instance.decimalPlaces = 2;
+                Settings.Instance.decimalSlider = 1;
+                Settings.Instance.sliderNumbersQ = 2;
+                Settings.Instance.inputLayer = false;
+                Settings.Instance.invertInputSlider = false;
+                Settings.Instance.themeColor = 0;
+                Settings.Instance.darkMode = false;
+
+                LoadLanguage("en"); //по умолчанию английский язык
+                Debug.Log("SettingsDefault");
+            }
 
 
-            LoadLanguage(settings.language); //загружаем язык
         }
         else //если файла сейва нет, то загружаем настройки по умолчанию
         {
@@ -109,6 +131,7 @@ public class SaveSystem : MonoBehaviour
             Settings.Instance.inputLayer = false;
             Settings.Instance.invertInputSlider = false;
             Settings.Instance.themeColor = 0;
+            Settings.Instance.darkMode = false;
 
             LoadLanguage("en"); //по умолчанию английский язык
             Debug.Log("SettingsDefault");
@@ -134,6 +157,7 @@ public class SaveSystem : MonoBehaviour
         settings.inputLayer = Settings.Instance.inputLayer;
         settings.invertInputSlider = Settings.Instance.invertInputSlider;
         settings.themeColor = Settings.Instance.themeColor;
+        settings.darkMode = Settings.Instance.darkMode;
 
         File.WriteAllText(path, JsonUtility.ToJson(settings)); //берем все и записываем в жсон
     }
@@ -163,4 +187,5 @@ public class SettingsSaves //класс с настройками, нужен для сохранения
     public bool inputLayer; //выбор режима ввода данных, если тру то поле для ввода, если фелс то слайдер
     public bool invertInputSlider; //когда тру инвертируем слайдер для ввода цифр
     public int themeColor;
+    public bool darkMode;
 }
