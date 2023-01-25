@@ -60,6 +60,13 @@ public class Calculations : MonoBehaviour
         FindStaticvalue();
     }
 
+    private void Start()
+    {
+        if(Settings.Instance.toSettings)
+        ToSettings();
+        Settings.Instance.toSettings = false;
+    }
+
     public void SetSliderInput()
     {
         ui.slidersForInput.Clear();

@@ -111,6 +111,7 @@ public class SaveSystem : MonoBehaviour
                 Settings.Instance.invertInputSlider = false;
                 Settings.Instance.themeColor = 0;
                 Settings.Instance.darkMode = false;
+                Settings.Instance.toSettings = true;
 
                 LoadLanguage("en"); //по умолчанию английский язык
                 Debug.Log("SettingsDefault");
@@ -132,6 +133,7 @@ public class SaveSystem : MonoBehaviour
             Settings.Instance.invertInputSlider = false;
             Settings.Instance.themeColor = 0;
             Settings.Instance.darkMode = false;
+            Settings.Instance.toSettings = true;
 
             LoadLanguage("en"); //по умолчанию английский язык
             Debug.Log("SettingsDefault");

@@ -166,17 +166,20 @@ public class UI : MonoBehaviour
     {
         language_drop.onValueChanged.AddListener(delegate { //ставим его в дропдовн меню
             Settings.Instance.language = Settings.Instance.myLangs[language_drop.value];
+            Settings.Instance.toSettings = true;
             ApplyLanguageChanges(); //применяем настройки смены языка при выборе другого
         });
 
         color_drop.onValueChanged.AddListener(delegate { //ставим его в дропдовн меню
             Settings.Instance.themeColor = color_drop.value;
+            Settings.Instance.toSettings = true;
             ApplyLanguageChanges(); //применяем настройки смены языка при выборе другого
         });
 
         Toggle_darkMode.onValueChanged.AddListener(delegate
         {
             Settings.Instance.darkMode = Toggle_darkMode.isOn;
+            Settings.Instance.toSettings = true;
             ApplyLanguageChanges();
         });
 

@@ -27,6 +27,7 @@ public class Settings : MonoBehaviour
     public bool invertInputSlider; //когда тру инвертируем слайдер для ввода цифр
     public int themeColor;
     public bool darkMode;
+    public bool toSettings;
 
     public UI ui; //скрипт уи
 
