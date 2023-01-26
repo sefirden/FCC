@@ -278,7 +278,7 @@ public class Calculations : MonoBehaviour
 
     public IEnumerator SetPaddingRight()
     {
-        yield return new WaitForFixedUpdate();
+        yield return new WaitForEndOfFrame();
         ui.language_drop_fieldName.transform.localPosition = new Vector3(ui.language_drop_fieldName.transform.localPosition.x + (ui.language_drop_fieldName.gameObject.GetComponent<RectTransform>().rect.width / 2), ui.language_drop_fieldName.transform.localPosition.y, ui.language_drop_fieldName.transform.localPosition.z);
         ui.color_drop_fieldName.transform.localPosition = new Vector3(ui.color_drop_fieldName.transform.localPosition.x + (ui.color_drop_fieldName.gameObject.GetComponent<RectTransform>().rect.width / 2), ui.color_drop_fieldName.transform.localPosition.y, ui.color_drop_fieldName.transform.localPosition.z);
         languageLabel = false;

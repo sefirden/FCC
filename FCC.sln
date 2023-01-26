@@ -51,6 +51,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Unity.TextMeshPro.Editor", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Unity.CollabProxy.Editor", "Unity.CollabProxy.Editor.csproj", "{5386E1FE-9DF5-B713-2E45-5FEC0753E2CC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoogleMobileAds.Editor", "GoogleMobileAds.Editor.csproj", "{7A2908B3-DB9A-E9FD-FD31-68BBD3994098}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Unity.Services.Core.Editor", "Unity.Services.Core.Editor.csproj", "{D9E3B206-85DA-CBBF-17DF-0812E3268309}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Unity.Mobile.AndroidLogcat.Editor", "Unity.Mobile.AndroidLogcat.Editor.csproj", "{1AFC7BC1-3F5D-3044-AB5F-3969FEB1107F}"
@@ -62,8 +64,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Unity.Notifications", "Unity.Notifications.csproj", "{DB2954A8-3AE3-5202-54DE-020916085072}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Unity.Services.Core.Configuration.Editor", "Unity.Services.Core.Configuration.Editor.csproj", "{BDFB5F54-B931-066D-13E1-76BD165E8B35}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoogleMobileAds.Editor", "GoogleMobileAds.Editor.csproj", "{7A2908B3-DB9A-E9FD-FD31-68BBD3994098}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -171,6 +171,10 @@ Global
 		{5386E1FE-9DF5-B713-2E45-5FEC0753E2CC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5386E1FE-9DF5-B713-2E45-5FEC0753E2CC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5386E1FE-9DF5-B713-2E45-5FEC0753E2CC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7A2908B3-DB9A-E9FD-FD31-68BBD3994098}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7A2908B3-DB9A-E9FD-FD31-68BBD3994098}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7A2908B3-DB9A-E9FD-FD31-68BBD3994098}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7A2908B3-DB9A-E9FD-FD31-68BBD3994098}.Release|Any CPU.Build.0 = Release|Any CPU
 		{D9E3B206-85DA-CBBF-17DF-0812E3268309}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{D9E3B206-85DA-CBBF-17DF-0812E3268309}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D9E3B206-85DA-CBBF-17DF-0812E3268309}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -195,10 +199,6 @@ Global
 		{BDFB5F54-B931-066D-13E1-76BD165E8B35}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BDFB5F54-B931-066D-13E1-76BD165E8B35}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BDFB5F54-B931-066D-13E1-76BD165E8B35}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7A2908B3-DB9A-E9FD-FD31-68BBD3994098}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7A2908B3-DB9A-E9FD-FD31-68BBD3994098}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7A2908B3-DB9A-E9FD-FD31-68BBD3994098}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7A2908B3-DB9A-E9FD-FD31-68BBD3994098}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
