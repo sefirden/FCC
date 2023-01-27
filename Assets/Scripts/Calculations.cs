@@ -118,17 +118,26 @@ public class Calculations : MonoBehaviour
     {
         if (Settings.Instance.sliderNumbersQ < 5 && Settings.Instance.decimalSlider > 0)
         {
-            TMP_Text number = ui.slidersForInput[Settings.Instance.sliderNumbersQ - 1].transform.Find("firstNumber").GetComponent<TMP_Text>();
-            TMP_Text decimal_t = ui.slidersForInput[Settings.Instance.sliderNumbersQ - 1].transform.Find("decimal").GetComponent<TMP_Text>();
+            TMP_Text number = ui.slidersForInput[Settings.Instance.sliderNumbersQ].transform.Find("firstNumber").GetComponent<TMP_Text>();
+            TMP_Text decimal_t = ui.slidersForInput[Settings.Instance.sliderNumbersQ].transform.Find("decimal").GetComponent<TMP_Text>();
 
             while(number.fontSize == 18f)
             {
                 yield return new WaitForFixedUpdate();
-            }            
-            decimal_t.fontSize = number.fontSize;
+            }
+            decimal_t.fontSize = number.fontSize;///1.5f;
 
-            RectTransform rt = decimal_t.GetComponent<RectTransform>();
-            rt.localPosition += new Vector3(ui.slidersForInput[Settings.Instance.sliderNumbersQ - 1].GetComponent<RectTransform>().rect.width/2,0,0);
+            // RectTransform rt = decimal_t.GetComponent<RectTransform>();
+            number.GetComponent<RectTransform>().offsetMax = new Vector2(-1, number.GetComponent<RectTransform>().offsetMax.y);
+            number.GetComponent<RectTransform>().offsetMin = new Vector2(9, number.GetComponent<RectTransform>().offsetMin.y);
+
+           Debug.Log(number.textInfo.characterInfo[0].ascender);
+
+
+            decimal_t.GetComponent<RectTransform>().offsetMax = new Vector2(-number.textInfo.characterInfo[0].ascender/2f, number.GetComponent<RectTransform>().offsetMax.y);
+            decimal_t.GetComponent<RectTransform>().offsetMin = new Vector2(-number.textInfo.characterInfo[0].ascender/2f, number.GetComponent<RectTransform>().offsetMin.y);
+
+            // rt.localPosition -= new Vector3(ui.slidersForInput[Settings.Instance.sliderNumbersQ].GetComponent<RectTransform>().rect.width/2.5f,0,0);
         }
     }
 
