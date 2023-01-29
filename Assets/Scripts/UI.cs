@@ -55,6 +55,8 @@ public class UI : MonoBehaviour
     public Image ToggledarkModeImage;
     public Color[] ColorSwap;
     public Color[] DarkModeColors;
+
+    public GameObject DecimalPoint;
     public float SuperWidth;
 
     private void Awake()
@@ -276,12 +278,4 @@ public class UI : MonoBehaviour
 
         SaveSystem.Instance.SettingsSave();
     }
-
-    /*public void DarkMode()
-    {
-        Settings.Instance.darkMode = Toggle_darkMode.isOn;
-        SaveSystem.Instance.SettingsSave(); //сохраняем настройки с новым языком
-        string lvl = SceneManager.GetActiveScene().name; //получаем имя активной сцены
-        //SceneManager.LoadScene(lvl); //и загружаем ее заново
-    }*/
 }

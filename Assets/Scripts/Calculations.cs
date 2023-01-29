@@ -110,34 +110,37 @@ public class Calculations : MonoBehaviour
                     ui.slidersForInput[i].GetComponentInChildren<TMP_Text>().text = Convert.ToString(characters[i]);
                 }
             }
-        }
+        }        
         StartCoroutine(SetSliderDecimal());
     }
 
     public IEnumerator SetSliderDecimal()
     {
+        yield return new WaitForFixedUpdate();
+        float sizeDecimal = 0f;
+
         if (Settings.Instance.sliderNumbersQ < 5 && Settings.Instance.decimalSlider > 0)
         {
-            TMP_Text number = ui.slidersForInput[Settings.Instance.sliderNumbersQ].transform.Find("firstNumber").GetComponent<TMP_Text>();
-            TMP_Text decimal_t = ui.slidersForInput[Settings.Instance.sliderNumbersQ].transform.Find("decimal").GetComponent<TMP_Text>();
+            GameObject decimal_temp = Instantiate(ui.DecimalPoint, ui.DecimalPoint.transform.position, Quaternion.identity, ui.SliderInput.transform);
+            decimal_temp.name = "decimal_temp"; //присваиваем имя
 
-            while(number.fontSize == 18f)
-            {
-                yield return new WaitForFixedUpdate();
-            }
-            decimal_t.fontSize = number.fontSize;///1.5f;
+            decimal_temp.gameObject.GetComponent<Transform>().SetSiblingIndex(Settings.Instance.sliderNumbersQ);
+            sizeDecimal = decimal_temp.GetComponent<RectTransform>().sizeDelta.x - (Settings.Instance.sliderNumbersQ + Settings.Instance.decimalSlider)*5;
+            decimal_temp.GetComponent<RectTransform>().sizeDelta = new Vector2(sizeDecimal, sizeDecimal);
+        }
 
-            // RectTransform rt = decimal_t.GetComponent<RectTransform>();
-            number.GetComponent<RectTransform>().offsetMax = new Vector2(-1, number.GetComponent<RectTransform>().offsetMax.y);
-            number.GetComponent<RectTransform>().offsetMin = new Vector2(9, number.GetComponent<RectTransform>().offsetMin.y);
+        SetWidthSlider(sizeDecimal);
+    }
 
-           Debug.Log(number.textInfo.characterInfo[0].ascender);
+    private void SetWidthSlider(float sizeDecimal)
+    {
+        float width = ui.ValueLayer.GetComponent<RectTransform>().rect.width;
+        float height = ui.slidersForInput[0].GetComponent<RectTransform>().sizeDelta.y;
+        float spacing = ui.SliderInput.GetComponent<HorizontalLayoutGroup>().spacing * (ui.SliderInput.transform.childCount-1);
 
-
-            decimal_t.GetComponent<RectTransform>().offsetMax = new Vector2(-number.textInfo.characterInfo[0].ascender/2f, number.GetComponent<RectTransform>().offsetMax.y);
-            decimal_t.GetComponent<RectTransform>().offsetMin = new Vector2(-number.textInfo.characterInfo[0].ascender/2f, number.GetComponent<RectTransform>().offsetMin.y);
-
-            // rt.localPosition -= new Vector3(ui.slidersForInput[Settings.Instance.sliderNumbersQ].GetComponent<RectTransform>().rect.width/2.5f,0,0);
+        for (int i = 0; i < (Settings.Instance.sliderNumbersQ + Settings.Instance.decimalSlider); i++)
+        {
+            ui.slidersForInput[i].GetComponent<RectTransform>().sizeDelta = new Vector2(((width - spacing - sizeDecimal) / (Settings.Instance.sliderNumbersQ + Settings.Instance.decimalSlider)), height);
         }
     }
 

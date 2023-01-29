@@ -9539,10 +9539,10 @@ RectTransform:
   m_Father: {fileID: 1845439879}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 24}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 18.36, y: -12}
+  m_SizeDelta: {x: 20.72, y: 24}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1240839807
 MonoBehaviour:
@@ -11626,11 +11626,11 @@ MonoBehaviour:
     m_Right: 0
     m_Top: 0
     m_Bottom: 0
-  m_ChildAlignment: 4
+  m_ChildAlignment: 7
   m_Spacing: 10
-  m_ChildForceExpandWidth: 1
+  m_ChildForceExpandWidth: 0
   m_ChildForceExpandHeight: 0
-  m_ChildControlWidth: 1
+  m_ChildControlWidth: 0
   m_ChildControlHeight: 0
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
@@ -12909,10 +12909,10 @@ RectTransform:
   m_Father: {fileID: 1593154517}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 24}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 30.64, y: -12}
+  m_SizeDelta: {x: 45.28, y: 24}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1664583049
 MonoBehaviour:
@@ -13283,10 +13283,10 @@ RectTransform:
   m_Father: {fileID: 121340292}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 24}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 27.045, y: -12}
+  m_SizeDelta: {x: 38.09, y: 24}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1712828597
 MonoBehaviour:
@@ -13681,6 +13681,8 @@ MonoBehaviour:
   - {r: 0.17254902, g: 0.24313726, b: 0.3137255, a: 1}
   - {r: 1, g: 1, b: 1, a: 1}
   - {r: 0.39607844, g: 0.39607844, b: 0.39607844, a: 1}
+  DecimalPoint: {fileID: 6343844615192085611, guid: 03db5780efbe04f44969e8789d973a17,
+    type: 3}
   SuperWidth: 0
 --- !u!114 &1726436902
 MonoBehaviour:
