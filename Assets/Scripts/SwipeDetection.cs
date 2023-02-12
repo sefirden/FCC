@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -30,6 +31,7 @@ public class SwipeDetection : MonoBehaviour
 
     public float WaitForSeconds;
     private bool animate;
+    public float animationSpeed = 1.0f;
 
     private void Awake()
     {
@@ -119,29 +121,40 @@ public class SwipeDetection : MonoBehaviour
 
     private IEnumerator NumberPlus()
     {
-        while(animate)
+       /* while(animate)
         {
             yield return new WaitForFixedUpdate();
         }
-
+       */
         animate = true;
         TMP_Text tempText = tempGameObject.GetComponent<TMP_Text>();
-        float startPosition = tempText.GetComponent<RectTransform>().rect.top;
-        float endPosition = (170 - tempText.fontSize - 10);
+        RectTransform textTransform = tempText.GetComponent<RectTransform>();
+        RectTransform parentTransform = tempText.transform.parent.GetComponent<RectTransform>();
+        TMP_TextInfo textInfo = tempText.textInfo;
+        tempText.ForceMeshUpdate();
 
-        //двигаем вверх
-        tempText.GetComponent<RectTransform>().offsetMax = new Vector2(tempText.GetComponent<RectTransform>().offsetMax.x, endPosition);
-        tempText.GetComponent<RectTransform>().offsetMin = new Vector2(tempText.GetComponent<RectTransform>().offsetMin.x, endPosition);
-        yield return new WaitForFixedUpdate();
+        float letterHeight = textInfo.characterInfo[0].ascender + 20f;
+        float parentHeight = parentTransform.rect.height;
+        float animationDistance = (parentHeight / 2) - (letterHeight / 2);
+
+        float currentPosition = textTransform.anchoredPosition.y;
+
+        float thisPosition = textTransform.anchoredPosition.y;
+        float targetTopPosition = currentPosition + animationDistance;
+        float targetDownPosition = currentPosition - animationDistance;
+
+        while (Mathf.Abs(textTransform.anchoredPosition.y - targetTopPosition) > 0.1f)
+        {
+            thisPosition = Mathf.MoveTowards(thisPosition, targetTopPosition, animationSpeed * Time.deltaTime);
+            textTransform.anchoredPosition = new Vector2(textTransform.anchoredPosition.x, thisPosition);
+        yield return null;
+        }
 
         int currentNumber = Convert.ToInt32(tempGameObject.GetComponent<TMP_Text>().text);
         tempGameObject.GetComponent<TMP_Text>().text = "";
-        yield return new WaitForFixedUpdate();
+        yield return null;
 
-        //двигаем вниз
-        tempText.GetComponent<RectTransform>().offsetMax = new Vector2(tempText.GetComponent<RectTransform>().offsetMax.x, -endPosition);
-        tempText.GetComponent<RectTransform>().offsetMin = new Vector2(tempText.GetComponent<RectTransform>().offsetMin.x, -endPosition);
-        yield return new WaitForFixedUpdate();
+        textTransform.anchoredPosition = new Vector2(textTransform.anchoredPosition.x, targetDownPosition);
 
         if (Settings.Instance.invertInputSlider)
         {
@@ -165,15 +178,21 @@ public class SwipeDetection : MonoBehaviour
                 currentNumber += 1;
             }
         }
-        yield return new WaitForFixedUpdate();
+
+        yield return null;
 
         tempGameObject.GetComponent<TMP_Text>().text = Convert.ToString(currentNumber);
         calculations.OnSliderChange();
-        yield return new WaitForFixedUpdate();
+        yield return null;
 
-        //двигаем вверх
-        tempText.GetComponent<RectTransform>().offsetMax = new Vector2(tempText.GetComponent<RectTransform>().offsetMax.x, -5);
-        tempText.GetComponent<RectTransform>().offsetMin = new Vector2(tempText.GetComponent<RectTransform>().offsetMin.x, 5);
+        thisPosition = textTransform.anchoredPosition.y;
+        while (Mathf.Abs(textTransform.anchoredPosition.y - targetTopPosition) > 0.1f)
+        {
+            thisPosition = Mathf.MoveTowards(thisPosition, currentPosition, animationSpeed * Time.deltaTime);
+            textTransform.anchoredPosition = new Vector2(textTransform.anchoredPosition.x, thisPosition);
+            yield return null;
+        }
+
         animate = false;
     }
 
