@@ -37,7 +37,6 @@ public class DataItem : MonoBehaviour
     {
         int index = gameObject.transform.GetSiblingIndex();
         ui.DeleteData(index);
-        Destroy(gameObject);
-
+        //Destroy(gameObject);        
     }
 }

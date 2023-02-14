@@ -34,6 +34,7 @@ public class UI : MonoBehaviour
 
     public GameObject sampleSliderInput;
     public List<GameObject> slidersForInput;
+    public List<Data> inverteddataList;
 
     public GameObject dataitem;
     public GameObject dataitemparent;
@@ -69,7 +70,11 @@ public class UI : MonoBehaviour
     public GameObject DecimalPoint;
     public float SuperWidth;
 
+    private int index;
     private Calculations calculations;
+
+    public ScrollRect scrollRect;
+    public float loadThreshold = 0.9f;
 
     private void Awake()
     {
@@ -198,6 +203,21 @@ public class UI : MonoBehaviour
             ApplyLanguageChanges();
         });
 
+        scrollRect.onValueChanged.AddListener(OnScrollValueChanged);
+    }
+
+    private async void OnScrollValueChanged(Vector2 value)
+    {
+        float currentPosition = scrollRect.verticalScrollbar.value;
+
+        if (currentPosition <= loadThreshold && currentPosition > 0.09f)
+        {
+            if (index < dataList.Count)
+            {
+                loadingIndicator.SetActive(true);
+                await LoadDataAsync();
+            }
+        }
     }
 
     void ApplyLanguageChanges() //применяем настройки смены языка при выборе другого
@@ -292,15 +312,14 @@ public class UI : MonoBehaviour
         SaveSystem.Instance.SettingsSave();
     }
 
-    public async Task SetDataToList()
+    public async void SetDataToList()
     {
+        #if UNITY_ANDROID && !UNITY_EDITOR
+            string filePath = Path.Combine(Application.persistentDataPath, "data.json");
+        #else
+            string filePath = Path.Combine(Application.dataPath, "data.json"); //путь к файлу с сейвами
+        #endif
 
-
-#if UNITY_ANDROID && !UNITY_EDITOR
-        string filePath = Path.Combine(Application.persistentDataPath, "Settings.json");
-#else
-        string filePath = Path.Combine(Application.dataPath, "data.json"); //путь к файлу с сейвами
-#endif
         dataList = new List<Data>();
 
         if (File.Exists(filePath))
@@ -315,28 +334,17 @@ public class UI : MonoBehaviour
             catch
             {
                 Debug.LogError("No child found");
-            }                      
-            
-            string json = await ReadFileAsync(filePath);
-            
+            }
+
+
+            string json = await Task.Run(() => File.ReadAllText(filePath));
             dataList = JsonConvert.DeserializeObject<List<Data>>(json);
+            
+            inverteddataList = new List<Data>(dataList);
+            inverteddataList.Reverse();
 
-            for (int i = 0; i < dataList.Count; i++)
-            {
-                Data data = dataList[i];
-
-                GameObject data_temp = Instantiate(dataitem, dataitem.transform.position, Quaternion.identity, dataitemparent.transform);
-                data_temp.name = "dataitem";
-
-                DataItem setdata = data_temp.GetComponent<DataItem>();
-                setdata.dataValue.text = dataList[i].date.ToString();
-
-                setdata.fromLabel.text = dataList[i].convertFrom_drop;
-                setdata.fromValue.text = dataList[i].inputValue;
-
-                setdata.toLabel.text = dataList[i].convertTo_drop;
-                setdata.toValue.text = dataList[i].resultText;
-            }            
+            index = 0;
+            await LoadDataAsync();
         }
         else
         {
@@ -345,33 +353,78 @@ public class UI : MonoBehaviour
 
     }
 
+    private async Task LoadDataAsync()
+    {
+        // Load portion of data
+        List<Data> portionOfData = await GetDataPortionAsync(index,20);
+        index += 20;
+        // Create data items using portion of data
+        foreach (Data data in portionOfData)
+        {
+            GameObject data_temp = Instantiate(dataitem, dataitem.transform.position, Quaternion.identity, dataitemparent.transform);
+            data_temp.name = "dataitem";
+
+            DataItem setdata = data_temp.GetComponent<DataItem>();
+            setdata.dataValue.text = data.date.ToString();
+
+            setdata.fromLabel.text = data.convertFrom_drop;
+            setdata.fromValue.text = data.inputValue;
+
+            setdata.toLabel.text = data.convertTo_drop;
+            setdata.toValue.text = data.resultText;
+        }
+        loadingIndicator.SetActive(false);
+        ValueLayer.SetActive(false);
+        DataListLayer.SetActive(true);
+    }
+
+    private async Task<List<Data>> GetDataPortionAsync(int startIndex, int count)
+    {
+        return await Task.Run(() =>
+        {
+            // Код загрузки данных
+            count = Math.Min(count, dataList.Count - startIndex);
+            List<Data> portionOfData = new List<Data>();
+            try
+            {
+                portionOfData = inverteddataList.GetRange(startIndex, count);
+            }
+            catch
+            {
+                Debug.Log("error");
+            }
+            return portionOfData;
+            
+        });
+    }
+
+
     public async void DeleteData(int index)
     {
+        loadingIndicator.SetActive(true);
 
-#if UNITY_ANDROID && !UNITY_EDITOR
-        string filePath = Path.Combine(Application.persistentDataPath, "Settings.json");
-#else
-        string filePath = Path.Combine(Application.dataPath, "data.json"); //путь к файлу с сейвами
+        #if UNITY_ANDROID && !UNITY_EDITOR
+            string filePath = Path.Combine(Application.persistentDataPath, "Settings.json");
+        #else
+            string filePath = Path.Combine(Application.dataPath, "data.json"); //путь к файлу с сейвами
 #endif
 
         dataList.RemoveAt(index);
         string newJson = JsonConvert.SerializeObject(dataList);
-
-        loadingIndicator.SetActive(true);
         await WriteTextAsync(filePath, newJson);
         loadingIndicator.SetActive(false);
 
+        Destroy(dataitemparent.transform.GetChild(index).gameObject);
         /*
         VerticalLayoutGroup verticalLayout = forcerebuildlayer.GetComponent<VerticalLayoutGroup>();
         verticalLayout.CalculateLayoutInputVertical();
         LayoutRebuilder.ForceRebuildLayoutImmediate(forcerebuildlayer.GetComponent<RectTransform>());*/
     }
 
-    public async void ToDataList()
+    public void ToDataList()
     {
-        await SetDataToList();
-        ValueLayer.SetActive(false);
-        DataListLayer.SetActive(true);
+        loadingIndicator.SetActive(true);
+        SetDataToList();
     }
 
     public void CollectData()
@@ -392,29 +445,28 @@ public class UI : MonoBehaviour
 
     public async void SaveData(Data data)
     {
+        loadingIndicator.SetActive(true);
 
-#if UNITY_ANDROID && !UNITY_EDITOR
-        string filePath = Path.Combine(Application.persistentDataPath, "Settings.json");
-#else
-        string filePath = Path.Combine(Application.dataPath, "data.json"); //путь к файлу с сейвами
-#endif
+        #if UNITY_ANDROID && !UNITY_EDITOR
+            string filePath = Path.Combine(Application.persistentDataPath, "data.json");
+        #else
+            string filePath = Path.Combine(Application.dataPath, "data.json"); //путь к файлу с сейвами
+        #endif
+
         List<Data> dataList = new List<Data>();
         if (File.Exists(filePath))
-        {
-            loadingIndicator.SetActive(true);
+        {   
             string json = await ReadFileAsync(filePath);
-            loadingIndicator.SetActive(false);
-
             dataList = JsonConvert.DeserializeObject<List<Data>>(json);
         }
         dataList.Add(data);
         string newJson = JsonConvert.SerializeObject(dataList);
 
-        loadingIndicator.SetActive(true);
         await WriteTextAsync(filePath, newJson);
         loadingIndicator.SetActive(false);
     }
 
+    
     private async Task WriteTextAsync(string filePath, string text)
     {
         using (StreamWriter writer = new StreamWriter(filePath))
@@ -432,5 +484,4 @@ public class UI : MonoBehaviour
         }
 
     }
-
 }
