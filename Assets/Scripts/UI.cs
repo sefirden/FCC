@@ -1,4 +1,6 @@
+using Newtonsoft.Json;
 using System;
+using System.IO;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -6,6 +8,8 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using System.Threading.Tasks;
+
 
 public class UI : MonoBehaviour
 {
@@ -17,17 +21,23 @@ public class UI : MonoBehaviour
 
     public GameObject SettingsLayer;
     public GameObject ValueLayer;
+    public GameObject DataListLayer;
     public GameObject OutputLine;
     public GameObject ClassicInput;
     public GameObject SliderInput;
     public GameObject resultTextO;
     public GameObject ExitSettingsLine;
-
+    public GameObject loadingIndicator;
 
     public List<string> dropStrings;
+    private List<Data> dataList;
 
     public GameObject sampleSliderInput;
     public List<GameObject> slidersForInput;
+
+    public GameObject dataitem;
+    public GameObject dataitemparent;
+    public GameObject forcerebuildlayer;
 
     //settings layer
     public TMP_Dropdown language_drop;
@@ -59,10 +69,13 @@ public class UI : MonoBehaviour
     public GameObject DecimalPoint;
     public float SuperWidth;
 
+    private Calculations calculations;
+
     private void Awake()
     {
         Settings.Instance.ui = FindObjectOfType<UI>();
-        
+        calculations = FindObjectOfType<Calculations>();
+
         SuperWidth = ValueLayer.GetComponent<RectTransform>().rect.width;
         SetWidth();
 
@@ -278,4 +291,146 @@ public class UI : MonoBehaviour
 
         SaveSystem.Instance.SettingsSave();
     }
+
+    public async Task SetDataToList()
+    {
+
+
+#if UNITY_ANDROID && !UNITY_EDITOR
+        string filePath = Path.Combine(Application.persistentDataPath, "Settings.json");
+#else
+        string filePath = Path.Combine(Application.dataPath, "data.json"); //путь к файлу с сейвами
+#endif
+        dataList = new List<Data>();
+
+        if (File.Exists(filePath))
+        {
+            try
+            {
+                foreach (Transform child in dataitemparent.transform)
+                {
+                    Destroy(child.gameObject);
+                }
+            }
+            catch
+            {
+                Debug.LogError("No child found");
+            }                      
+            
+            string json = await ReadFileAsync(filePath);
+            
+            dataList = JsonConvert.DeserializeObject<List<Data>>(json);
+
+            for (int i = 0; i < dataList.Count; i++)
+            {
+                Data data = dataList[i];
+
+                GameObject data_temp = Instantiate(dataitem, dataitem.transform.position, Quaternion.identity, dataitemparent.transform);
+                data_temp.name = "dataitem";
+
+                DataItem setdata = data_temp.GetComponent<DataItem>();
+                setdata.dataValue.text = dataList[i].date.ToString();
+
+                setdata.fromLabel.text = dataList[i].convertFrom_drop;
+                setdata.fromValue.text = dataList[i].inputValue;
+
+                setdata.toLabel.text = dataList[i].convertTo_drop;
+                setdata.toValue.text = dataList[i].resultText;
+            }            
+        }
+        else
+        {
+            Debug.Log("нет данных");
+        }
+
+    }
+
+    public async void DeleteData(int index)
+    {
+
+#if UNITY_ANDROID && !UNITY_EDITOR
+        string filePath = Path.Combine(Application.persistentDataPath, "Settings.json");
+#else
+        string filePath = Path.Combine(Application.dataPath, "data.json"); //путь к файлу с сейвами
+#endif
+
+        dataList.RemoveAt(index);
+        string newJson = JsonConvert.SerializeObject(dataList);
+
+        loadingIndicator.SetActive(true);
+        await WriteTextAsync(filePath, newJson);
+        loadingIndicator.SetActive(false);
+
+        /*
+        VerticalLayoutGroup verticalLayout = forcerebuildlayer.GetComponent<VerticalLayoutGroup>();
+        verticalLayout.CalculateLayoutInputVertical();
+        LayoutRebuilder.ForceRebuildLayoutImmediate(forcerebuildlayer.GetComponent<RectTransform>());*/
+    }
+
+    public async void ToDataList()
+    {
+        await SetDataToList();
+        ValueLayer.SetActive(false);
+        DataListLayer.SetActive(true);
+    }
+
+    public void CollectData()
+    {
+        string input = Convert.ToString(calculations.doubleInput);
+
+        Data data = new Data
+        {
+            inputValue = input,
+            resultText = resultText.text,
+            convertFrom_drop = dropStrings[convertFrom_drop.value],
+            convertTo_drop = dropStrings[convertTo_drop.value],
+            date = DateTime.Now
+        };       
+
+        SaveData(data);
+    }
+
+    public async void SaveData(Data data)
+    {
+
+#if UNITY_ANDROID && !UNITY_EDITOR
+        string filePath = Path.Combine(Application.persistentDataPath, "Settings.json");
+#else
+        string filePath = Path.Combine(Application.dataPath, "data.json"); //путь к файлу с сейвами
+#endif
+        List<Data> dataList = new List<Data>();
+        if (File.Exists(filePath))
+        {
+            loadingIndicator.SetActive(true);
+            string json = await ReadFileAsync(filePath);
+            loadingIndicator.SetActive(false);
+
+            dataList = JsonConvert.DeserializeObject<List<Data>>(json);
+        }
+        dataList.Add(data);
+        string newJson = JsonConvert.SerializeObject(dataList);
+
+        loadingIndicator.SetActive(true);
+        await WriteTextAsync(filePath, newJson);
+        loadingIndicator.SetActive(false);
+    }
+
+    private async Task WriteTextAsync(string filePath, string text)
+    {
+        using (StreamWriter writer = new StreamWriter(filePath))
+        {
+            await writer.WriteAsync(text);
+        }
+    }
+
+    private async Task<string> ReadFileAsync(string filePath)
+    {
+
+        using (StreamReader reader = new StreamReader(filePath))
+        {
+            return await reader.ReadToEndAsync();
+        }
+
+    }
+
 }

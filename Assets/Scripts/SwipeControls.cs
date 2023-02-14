@@ -34,7 +34,7 @@ public partial class @SwipeControls : IInputActionCollection2, IDisposable
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": ""Press"",
-                    ""initialStateCheck"": false
+                    ""initialStateCheck"": true
                 },
                 {
                     ""name"": ""PrimaryPosition"",
@@ -50,7 +50,7 @@ public partial class @SwipeControls : IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""152d2e78-ea5d-42da-be87-efe962213539"",
-                    ""path"": ""<Touchscreen>/primaryTouch/press"",
+                    ""path"": ""<Touchscreen>/touch0/press"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",

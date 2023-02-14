@@ -10,7 +10,7 @@ using UnityEngine.UIElements;
 
 public class Calculations : MonoBehaviour
 {
-    double doubleInput;
+    public double doubleInput;
     public double staticvalue;
     private bool languageLabel;
     private UI ui; //скрипт уи
@@ -173,7 +173,7 @@ public class Calculations : MonoBehaviour
         }
         else
         {
-            ui.resultText.text = "Enter valid data";
+            ui.resultText.text = SaveSystem.GetText("valid_data");
         }
     }
 
@@ -245,7 +245,7 @@ public class Calculations : MonoBehaviour
         }
         else
         {
-            ui.resultText.text = "Enter valid data";
+            ui.resultText.text = SaveSystem.GetText("valid_data");
         }
     }
 
@@ -300,6 +300,7 @@ public class Calculations : MonoBehaviour
     {
         ui.ValueLayer.SetActive(true);
         ui.SettingsLayer.SetActive(false);
+        ui.DataListLayer.SetActive(false);
 
         if (Settings.Instance.inputLayer)
         {

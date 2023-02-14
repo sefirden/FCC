@@ -29,6 +29,7 @@ public class Settings : MonoBehaviour
     public bool darkMode;
     public bool toSettings;
 
+
     public UI ui; //скрипт уи
 
     public string[] myLangs; //список языков   

@@ -1,3 +1,4 @@
+using GoogleMobileAds.Api;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -16,6 +17,9 @@ public class InputManager : MonoBehaviour
 
     private SwipeControls swipeControls;
     private Camera mainCamera;
+    private Vector2 startSwipePos;
+    private Vector2 endSwipePos;
+
     public static InputManager Instance { get; private set; }
 
     private void Awake()
@@ -48,14 +52,14 @@ public class InputManager : MonoBehaviour
 
     private void StartTouchPrimary(InputAction.CallbackContext context)
     {
-        if (OnStartTouch != null) OnStartTouch(Utils.ScreenToWorld(mainCamera, swipeControls.Touch.PrimaryPosition.ReadValue<Vector2>()), (float)context.startTime);
-        //if (OnStartTouch != null) OnStartTouch(swipeControls.Touch.PrimaryPosition.ReadValue<Vector2>(), (float)context.startTime);
+        startSwipePos = Utils.ScreenToWorld(mainCamera, swipeControls.Touch.PrimaryPosition.ReadValue<Vector2>());
+        if (OnStartTouch != null) OnStartTouch(startSwipePos, (float)context.startTime);
     }
 
     private void EndTouchPrimary(InputAction.CallbackContext context)
     {
-        if (OnEndTouch != null) OnEndTouch(Utils.ScreenToWorld(mainCamera, swipeControls.Touch.PrimaryPosition.ReadValue<Vector2>()), (float)context.time);
-        //if (OnEndTouch != null) OnEndTouch(swipeControls.Touch.PrimaryPosition.ReadValue<Vector2>(), (float)context.time);
+        endSwipePos = Utils.ScreenToWorld(mainCamera, swipeControls.Touch.PrimaryPosition.ReadValue<Vector2>());
+        if (OnEndTouch != null) OnEndTouch(endSwipePos, (float)context.time);
     }
 
     public Vector2 PrimaryPosition()
@@ -63,4 +67,8 @@ public class InputManager : MonoBehaviour
         return Utils.ScreenToWorld(mainCamera, swipeControls.Touch.PrimaryPosition.ReadValue<Vector2>());
     }
 
+    public Vector2 SwipeDirection()
+    {
+        return endSwipePos - startSwipePos;
+    }
 }

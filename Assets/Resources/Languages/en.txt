@@ -12,3 +12,6 @@ classic-Classic input
 invert_slider-Invert slider input
 color-Interface color
 darkmode-Dark theme
+valid_data-Enter valid data
+datalist-Saved results
+date-Date

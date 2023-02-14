@@ -71,8 +71,10 @@ public class SwipeDetection : MonoBehaviour
     {
         endPosition = position;
         endTime = time;
+        Vector2 swipeDirection = InputManager.Instance.SwipeDirection();
         DetectSwipe();
     }
+
 
     private void CheckIsNumber()
     {
@@ -103,7 +105,7 @@ public class SwipeDetection : MonoBehaviour
             Debug.DrawLine(startPosition, endPosition, Color.red, 5f);
             Vector3 direction = endPosition - startPosition;
             Vector2 direction2D = new Vector2(direction.x, direction.y).normalized;
-            SwipeDirection(direction2D); //тут передаем еще обьект
+            SwipeDirection(direction2D);
         }
     }
 
@@ -121,11 +123,11 @@ public class SwipeDetection : MonoBehaviour
 
     private IEnumerator NumberPlus()
     {
-       /* while(animate)
+        while(animate)
         {
             yield return new WaitForFixedUpdate();
         }
-       */
+       
         animate = true;
         TMP_Text tempText = tempGameObject.GetComponent<TMP_Text>();
         RectTransform textTransform = tempText.GetComponent<RectTransform>();
@@ -145,9 +147,10 @@ public class SwipeDetection : MonoBehaviour
 
         while (Mathf.Abs(textTransform.anchoredPosition.y - targetTopPosition) > 0.1f)
         {
+            targetTopPosition = currentPosition + animationDistance;
             thisPosition = Mathf.MoveTowards(thisPosition, targetTopPosition, animationSpeed * Time.deltaTime);
             textTransform.anchoredPosition = new Vector2(textTransform.anchoredPosition.x, thisPosition);
-        yield return null;
+            yield return null;
         }
 
         int currentNumber = Convert.ToInt32(tempGameObject.GetComponent<TMP_Text>().text);
@@ -188,7 +191,8 @@ public class SwipeDetection : MonoBehaviour
         thisPosition = textTransform.anchoredPosition.y;
         while (Mathf.Abs(textTransform.anchoredPosition.y - targetTopPosition) > 0.1f)
         {
-            thisPosition = Mathf.MoveTowards(thisPosition, currentPosition, animationSpeed * Time.deltaTime);
+            targetTopPosition = currentPosition;
+            thisPosition = Mathf.MoveTowards(thisPosition, targetTopPosition, animationSpeed * Time.deltaTime);
             textTransform.anchoredPosition = new Vector2(textTransform.anchoredPosition.x, thisPosition);
             yield return null;
         }
@@ -202,23 +206,37 @@ public class SwipeDetection : MonoBehaviour
         {
             yield return new WaitForFixedUpdate();
         }
+
         animate = true;
         TMP_Text tempText = tempGameObject.GetComponent<TMP_Text>();
-        float endPosition = (170 - tempText.fontSize - 10);
+        RectTransform textTransform = tempText.GetComponent<RectTransform>();
+        RectTransform parentTransform = tempText.transform.parent.GetComponent<RectTransform>();
+        TMP_TextInfo textInfo = tempText.textInfo;
+        tempText.ForceMeshUpdate();
 
-        //двигаем вниз
-        tempText.GetComponent<RectTransform>().offsetMax = new Vector2(tempText.GetComponent<RectTransform>().offsetMax.x, -endPosition);
-        tempText.GetComponent<RectTransform>().offsetMin = new Vector2(tempText.GetComponent<RectTransform>().offsetMin.x, -endPosition);
-        yield return new WaitForFixedUpdate();
+        float letterHeight = textInfo.characterInfo[0].ascender + 20f;
+        float parentHeight = parentTransform.rect.height;
+        float animationDistance = (parentHeight / 2) - (letterHeight / 2);
+
+        float currentPosition = textTransform.anchoredPosition.y;
+
+        float thisPosition = textTransform.anchoredPosition.y;
+        float targetTopPosition = currentPosition + animationDistance;
+        float targetDownPosition = currentPosition - animationDistance;
+
+        while (Mathf.Abs(textTransform.anchoredPosition.y - targetDownPosition) > 0.1f)
+        {
+            targetDownPosition = currentPosition - animationDistance;
+            thisPosition = Mathf.MoveTowards(thisPosition, targetDownPosition, animationSpeed * Time.deltaTime);
+            textTransform.anchoredPosition = new Vector2(textTransform.anchoredPosition.x, thisPosition);
+            yield return null;
+        }
 
         int currentNumber = Convert.ToInt32(tempGameObject.GetComponent<TMP_Text>().text);
         tempGameObject.GetComponent<TMP_Text>().text = "";
-        yield return new WaitForFixedUpdate();
+        yield return null;
 
-        //двигаем вверх
-        tempText.GetComponent<RectTransform>().offsetMax = new Vector2(tempText.GetComponent<RectTransform>().offsetMax.x, endPosition);
-        tempText.GetComponent<RectTransform>().offsetMin = new Vector2(tempText.GetComponent<RectTransform>().offsetMin.x, endPosition);
-        yield return new WaitForFixedUpdate();
+        textTransform.anchoredPosition = new Vector2(textTransform.anchoredPosition.x, targetTopPosition);
 
         if (Settings.Instance.invertInputSlider)
         {
@@ -243,15 +261,20 @@ public class SwipeDetection : MonoBehaviour
             }
 
         }
-        yield return new WaitForFixedUpdate();
+        yield return null;
 
         tempGameObject.GetComponent<TMP_Text>().text = Convert.ToString(currentNumber);
         calculations.OnSliderChange();
-        yield return new WaitForFixedUpdate();
+        yield return null;
 
-        //двигаем вверх
-        tempText.GetComponent<RectTransform>().offsetMax = new Vector2(tempText.GetComponent<RectTransform>().offsetMax.x, -5);
-        tempText.GetComponent<RectTransform>().offsetMin = new Vector2(tempText.GetComponent<RectTransform>().offsetMin.x, 5);
+        thisPosition = textTransform.anchoredPosition.y;
+        while (Mathf.Abs(textTransform.anchoredPosition.y - currentPosition) > 0.1f)
+        {
+            thisPosition = Mathf.MoveTowards(thisPosition, currentPosition, animationSpeed * Time.deltaTime);
+            textTransform.anchoredPosition = new Vector2(textTransform.anchoredPosition.x, thisPosition);
+            yield return null;
+        }
+
         animate = false;
     }
 }
