@@ -9,6 +9,8 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using System.Threading.Tasks;
+using System.Globalization;
+
 
 
 public class UI : MonoBehaviour
@@ -26,15 +28,18 @@ public class UI : MonoBehaviour
     public GameObject ClassicInput;
     public GameObject SliderInput;
     public GameObject resultTextO;
-    public GameObject ExitSettingsLine;
+    public GameObject ExitSpacing;
     public GameObject loadingIndicator;
+
+    public GameObject noDataIndicator;
+
+    public GameObject Toast;
 
     public List<string> dropStrings;
     private List<Data> dataList;
 
     public GameObject sampleSliderInput;
     public List<GameObject> slidersForInput;
-    public List<Data> inverteddataList;
 
     public GameObject dataitem;
     public GameObject dataitemparent;
@@ -74,7 +79,10 @@ public class UI : MonoBehaviour
     private Calculations calculations;
 
     public ScrollRect scrollRect;
-    public float loadThreshold = 0.9f;
+    public Scrollbar scrollbarVertical;
+    public float loadThreshold = 0.01f;
+
+    private bool loading;
 
     private void Awake()
     {
@@ -86,14 +94,14 @@ public class UI : MonoBehaviour
 
         language_drop.value = Array.IndexOf(Settings.Instance.myLangs, Settings.Instance.language);
 
-        for(int i = 0; i< ColorSwap.Length; i++)
+        for (int i = 0; i < ColorSwap.Length; i++)
         {
-            var texture = new Texture2D(1, 1); 
+            var texture = new Texture2D(1, 1);
             texture.SetPixel(0, 0, ColorSwap[i]);
             texture.Apply();
             var item = new TMP_Dropdown.OptionData(Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0, 0))); // creating dropdown item and converting texture to sprite
             color_drop.options.Add(item);
-        }    
+        }
         color_drop.value = Settings.Instance.themeColor;
 
         decimalPlaces_slider.value = Settings.Instance.decimalPlaces;
@@ -110,10 +118,10 @@ public class UI : MonoBehaviour
         if (Settings.Instance.invertInputSlider)
         {
             ToggleInvertInputImage.sprite = SpriteToggle[1];
-            if(Settings.Instance.darkMode)
+            if (Settings.Instance.darkMode)
                 ToggleInvertInputImage.color = DarkModeColors[1];
             else
-                ToggleInvertInputImage.color = ColorSwap[Settings.Instance.themeColor]; 
+                ToggleInvertInputImage.color = ColorSwap[Settings.Instance.themeColor];
         }
         else
         {
@@ -146,7 +154,7 @@ public class UI : MonoBehaviour
 
             SliderSettingsHide.SetActive(true);
         }
-        
+
         if (Settings.Instance.darkMode)
         {
             ToggledarkModeImage.sprite = SpriteToggle[1];
@@ -177,9 +185,13 @@ public class UI : MonoBehaviour
     {
         float width = SuperWidth;
         float height = 72f;
-        convertFrom_drop.GetComponent<RectTransform>().sizeDelta = new Vector2((width - 72f - 10f - 10f) / 2f, height);
-        convertTo_drop.GetComponent<RectTransform>().sizeDelta = new Vector2((width - 72f - 10f - 10f) / 2f, height);
-        ExitSettingsLine.GetComponent<HorizontalLayoutGroup>().spacing = (width - 288f) / 3f;
+        float spacing = 10f;
+        convertFrom_drop.GetComponent<RectTransform>().sizeDelta = new Vector2((width - height - spacing * 2f) / 2f, height);
+        convertTo_drop.GetComponent<RectTransform>().sizeDelta = new Vector2((width - height - spacing * 2f) / 2f, height);
+        resultTextO.GetComponent<RectTransform>().sizeDelta = new Vector2((width - height - spacing), height);
+
+
+        ExitSpacing.GetComponent<RectTransform>().sizeDelta = new Vector2((width - height * 3 - spacing * 3f), height);
     }
 
     private void Start()
@@ -206,16 +218,25 @@ public class UI : MonoBehaviour
         scrollRect.onValueChanged.AddListener(OnScrollValueChanged);
     }
 
-    private async void OnScrollValueChanged(Vector2 value)
+    private void OnScrollValueChanged(Vector2 value)
     {
-        float currentPosition = scrollRect.verticalScrollbar.value;
+        ScrollValue();
+    }
 
-        if (currentPosition <= loadThreshold && currentPosition > 0.09f)
+    private async void ScrollValue()
+    {
+       // float currentPosition = scrollbarVertical.value;
+
+        float currentPosition = scrollRect.verticalScrollbar.value;
+        float maxPosition = scrollRect.verticalScrollbar.size;
+
+        if (currentPosition <= maxPosition - loadThreshold && !loading)
         {
             if (index < dataList.Count)
             {
+                Debug.Log("load");
                 loadingIndicator.SetActive(true);
-                await LoadDataAsync();
+                await LoadDataAsync();                
             }
         }
     }
@@ -336,25 +357,40 @@ public class UI : MonoBehaviour
                 Debug.LogError("No child found");
             }
 
-
             string json = await Task.Run(() => File.ReadAllText(filePath));
             dataList = JsonConvert.DeserializeObject<List<Data>>(json);
-            
-            inverteddataList = new List<Data>(dataList);
-            inverteddataList.Reverse();
 
-            index = 0;
-            await LoadDataAsync();
+            if (dataList.Count == 0)
+            {
+                NoDataIndicator();
+            }
+            else
+            {
+                index = 0;
+                await LoadDataAsync();
+            }
+
         }
         else
         {
-            Debug.Log("нет данных");
+            NoDataIndicator();
         }
 
     }
 
+    private void NoDataIndicator()
+    {
+        GameObject nodata = Instantiate(noDataIndicator, noDataIndicator.transform.position, Quaternion.identity, dataitemparent.transform);
+        nodata.name = "nodataindicator";
+
+        loadingIndicator.SetActive(false);
+        ValueLayer.SetActive(false);
+        DataListLayer.SetActive(true);
+    }
+
     private async Task LoadDataAsync()
     {
+        loading = true;
         // Load portion of data
         List<Data> portionOfData = await GetDataPortionAsync(index,20);
         index += 20;
@@ -365,7 +401,7 @@ public class UI : MonoBehaviour
             data_temp.name = "dataitem";
 
             DataItem setdata = data_temp.GetComponent<DataItem>();
-            setdata.dataValue.text = data.date.ToString();
+            setdata.dataValue.text = data.date.ToString("HH:mm\ndd MMM yy", CultureInfo.CurrentCulture);
 
             setdata.fromLabel.text = data.convertFrom_drop;
             setdata.fromValue.text = data.inputValue;
@@ -373,9 +409,9 @@ public class UI : MonoBehaviour
             setdata.toLabel.text = data.convertTo_drop;
             setdata.toValue.text = data.resultText;
         }
-        loadingIndicator.SetActive(false);
         ValueLayer.SetActive(false);
         DataListLayer.SetActive(true);
+        StartCoroutine(UpdateLayoutGroup());
     }
 
     private async Task<List<Data>> GetDataPortionAsync(int startIndex, int count)
@@ -387,11 +423,11 @@ public class UI : MonoBehaviour
             List<Data> portionOfData = new List<Data>();
             try
             {
-                portionOfData = inverteddataList.GetRange(startIndex, count);
+                portionOfData = dataList.GetRange(startIndex, count);
             }
             catch
             {
-                Debug.Log("error");
+                Debug.Log("error load portion data");
             }
             return portionOfData;
             
@@ -399,7 +435,7 @@ public class UI : MonoBehaviour
     }
 
 
-    public async void DeleteData(int index)
+    public async void DeleteData(int indexD)
     {
         loadingIndicator.SetActive(true);
 
@@ -407,18 +443,55 @@ public class UI : MonoBehaviour
             string filePath = Path.Combine(Application.persistentDataPath, "Settings.json");
         #else
             string filePath = Path.Combine(Application.dataPath, "data.json"); //путь к файлу с сейвами
-#endif
+        #endif
 
-        dataList.RemoveAt(index);
+        dataList.RemoveAt(indexD);
+        index--;
         string newJson = JsonConvert.SerializeObject(dataList);
         await WriteTextAsync(filePath, newJson);
-        loadingIndicator.SetActive(false);
 
-        Destroy(dataitemparent.transform.GetChild(index).gameObject);
-        /*
-        VerticalLayoutGroup verticalLayout = forcerebuildlayer.GetComponent<VerticalLayoutGroup>();
-        verticalLayout.CalculateLayoutInputVertical();
-        LayoutRebuilder.ForceRebuildLayoutImmediate(forcerebuildlayer.GetComponent<RectTransform>());*/
+        if (dataList.Count == 0)
+        {
+            NoDataIndicator();
+        }
+
+        StartCoroutine(ToastShow("delete_data"));
+
+        Debug.Log($"dataitemparent.transform.childCount {dataitemparent.transform.childCount}");
+        Debug.Log($"dataList.Count {dataList.Count}");
+        if (dataitemparent.transform.childCount < 10 && dataList.Count > dataitemparent.transform.childCount)
+        {
+            Debug.Log("try to load");
+            if (indexD < dataList.Count)
+            {
+                loadingIndicator.SetActive(true);
+                await LoadDataAsync();
+            }
+        }
+
+        Destroy(dataitemparent.transform.GetChild(indexD).gameObject);
+        StartCoroutine(UpdateLayoutGroup());
+    }
+
+    IEnumerator UpdateLayoutGroup()
+    {
+        yield return new WaitForEndOfFrame();
+
+        forcerebuildlayer.gameObject.GetComponent<VerticalLayoutGroup>().CalculateLayoutInputVertical();
+        LayoutRebuilder.ForceRebuildLayoutImmediate(forcerebuildlayer.gameObject.GetComponent<RectTransform>());
+
+        yield return new WaitForEndOfFrame();
+        loadingIndicator.SetActive(false);
+        loading = false;
+    }
+
+    private IEnumerator ToastShow(string temptext)
+    {
+        Toast.SetActive(true);
+        string toasttext = SaveSystem.GetText(temptext);
+        Toast.GetComponentInChildren<TMP_Text>().text = toasttext;
+        yield return new WaitForSecondsRealtime(2f);
+        Toast.SetActive(false);
     }
 
     public void ToDataList()
@@ -459,14 +532,15 @@ public class UI : MonoBehaviour
             string json = await ReadFileAsync(filePath);
             dataList = JsonConvert.DeserializeObject<List<Data>>(json);
         }
-        dataList.Add(data);
+        dataList.Insert(0, data);
         string newJson = JsonConvert.SerializeObject(dataList);
 
         await WriteTextAsync(filePath, newJson);
         loadingIndicator.SetActive(false);
-    }
 
-    
+        StartCoroutine(ToastShow("save_data"));
+    }
+        
     private async Task WriteTextAsync(string filePath, string text)
     {
         using (StreamWriter writer = new StreamWriter(filePath))

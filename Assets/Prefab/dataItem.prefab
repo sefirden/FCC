@@ -85,6 +85,8 @@ MonoBehaviour:
   image: 1
   darkImage: 0
   allColors: 0
+  toast: 0
+  toasttext: 0
 --- !u!114 &7305937053147027805
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -256,6 +258,8 @@ MonoBehaviour:
   image: 0
   darkImage: 0
   allColors: 0
+  toast: 0
+  toasttext: 0
 --- !u!222 &7305937053576682788
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -419,6 +423,8 @@ MonoBehaviour:
   image: 0
   darkImage: 0
   allColors: 0
+  toast: 0
+  toasttext: 0
 --- !u!114 &7305937053913708930
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -475,7 +481,7 @@ MonoBehaviour:
   m_fontSizeMax: 20
   m_fontStyle: 0
   m_HorizontalAlignment: 1
-  m_VerticalAlignment: 1024
+  m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 8.9
   m_wordSpacing: 0
@@ -574,6 +580,8 @@ MonoBehaviour:
   image: 0
   darkImage: 0
   allColors: 0
+  toast: 0
+  toasttext: 0
 --- !u!114 &7305937053968922939
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -760,6 +768,8 @@ MonoBehaviour:
   image: 0
   darkImage: 0
   allColors: 0
+  toast: 0
+  toasttext: 0
 --- !u!114 &7305937054679403826
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -975,6 +985,8 @@ MonoBehaviour:
   image: 0
   darkImage: 0
   allColors: 1
+  toast: 0
+  toasttext: 0
 --- !u!114 &7305937054721593476
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1118,6 +1130,8 @@ MonoBehaviour:
   image: 0
   darkImage: 0
   allColors: 0
+  toast: 0
+  toasttext: 0
 --- !u!222 &7305937054725679644
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1281,6 +1295,8 @@ MonoBehaviour:
   image: 0
   darkImage: 0
   allColors: 0
+  toast: 0
+  toasttext: 0
 --- !u!114 &7305937054829850042
 MonoBehaviour:
   m_ObjectHideFlags: 0

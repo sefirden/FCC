@@ -12,6 +12,8 @@ public class SetColor : MonoBehaviour
     public bool image;
     public bool darkImage;
     public bool allColors;
+    public bool toast;
+    public bool toasttext;
 
 
 
@@ -29,7 +31,30 @@ public class SetColor : MonoBehaviour
 
         if (allColors)
             ColorAllColors();
+
+        if(toast)
+            ColorToast();
+
+        if (toasttext)
+            ColorToastText();
     }
+
+    private void ColorToast()
+    {
+        if (Settings.Instance.darkMode)
+            gameObject.GetComponent<Image>().color = ui.DarkModeColors[1];
+        else
+            gameObject.GetComponent<Image>().color = ui.DarkModeColors[0];
+    }
+
+    private void ColorToastText()
+    {
+        if (Settings.Instance.darkMode)
+            gameObject.GetComponent<TMP_Text>().color = ui.DarkModeColors[0];
+        else
+            gameObject.GetComponent<TMP_Text>().color = ui.DarkModeColors[1];
+    }
+
 
     private void ColorText()
     {
