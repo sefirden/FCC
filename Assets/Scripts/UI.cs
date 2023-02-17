@@ -439,10 +439,10 @@ public class UI : MonoBehaviour
     {
         loadingIndicator.SetActive(true);
 
-        #if UNITY_ANDROID && !UNITY_EDITOR
-            string filePath = Path.Combine(Application.persistentDataPath, "Settings.json");
-        #else
-            string filePath = Path.Combine(Application.dataPath, "data.json"); //путь к файлу с сейвами
+    #if UNITY_ANDROID && !UNITY_EDITOR
+            string filePath = Path.Combine(Application.persistentDataPath, "data.json");
+    #else
+        string filePath = Path.Combine(Application.dataPath, "data.json"); //путь к файлу с сейвами
         #endif
 
         dataList.RemoveAt(indexD);

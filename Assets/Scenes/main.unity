@@ -2435,7 +2435,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: enter_value
+  m_text: no_value
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: a546b839be1cc7c459faa6cfa7b87775, type: 2}
   m_sharedMaterial: {fileID: -4000767836868422904, guid: a546b839be1cc7c459faa6cfa7b87775,
@@ -2525,7 +2525,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0e5829c850e01e64390311d2adca9711, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  text_id: enter_value
+  text_id: no_value
 --- !u!114 &215160806
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5234,7 +5234,7 @@ MonoBehaviour:
   m_enableAutoSizing: 1
   m_fontSizeMin: 20
   m_fontSizeMax: 65
-  m_fontStyle: 16
+  m_fontStyle: 0
   m_HorizontalAlignment: 1
   m_VerticalAlignment: 512
   m_textAlignment: 65535
@@ -17970,7 +17970,7 @@ MonoBehaviour:
   m_LineType: 0
   m_HideMobileInput: 0
   m_HideSoftKeyboard: 0
-  m_CharacterValidation: 3
+  m_CharacterValidation: 0
   m_RegexValue: ^\d+(?:,\d+)?\z
   m_GlobalPointSize: 14
   m_CharacterLimit: 6

@@ -1,12 +1,14 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+using System.Text.RegularExpressions;
 using TMPro;
 using UnityEngine;
 using UnityEngine.PlayerLoop;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-using UnityEngine.UIElements;
 
 public class Calculations : MonoBehaviour
 {
@@ -221,30 +223,48 @@ public class Calculations : MonoBehaviour
     }
 
     public void OnInputChange() //для инпут поля
-    {        
+    {
         try
         {
-            doubleInput = Convert.ToDouble(ui.inputValue.text);            
+            doubleInput = Convert.ToDouble(ui.inputValue.text);
+            Debug.Log("пробуем конвертировать в дабл");
         }
         catch
         {
-            ui.inputValue.text = ui.inputValue.text.Replace('.', ',');
-            try
+            Debug.Log("не конвертирует первый раз");
+            ui.inputValue.text = Regex.Replace(ui.inputValue.text, "[^0-9.,]", "");
+
+            if (ui.inputValue.text.Count(x => x == '.') + ui.inputValue.text.Count(x => x == ',') > 1)
             {
-                doubleInput = Convert.ToDouble(ui.inputValue.text);
+                Debug.Log("нашли две точки или запятые");
+                int lastIndex = ui.inputValue.text.LastIndexOfAny(new char[] { '.', ',' });
+                if (ui.inputValue.text.Substring(lastIndex).Contains(",") || ui.inputValue.text.Substring(lastIndex).Contains("."))
+                {
+                    Debug.Log("нашли вторую точку или запятую");
+                    int firstIndex = ui.inputValue.text.IndexOfAny(new char[] { '.', ',' });
+                    ui.inputValue.text = ui.inputValue.text.Remove(firstIndex, 1);
+                }
+            }
+                try
+            {
+                Debug.Log("пробуем конвертировать в дабл второй раз");
+                doubleInput = Convert.ToDouble(ui.inputValue.text.Replace('.', ','));
             }
             catch
             {
+                Debug.Log("не конвертирует второй раз");
                 doubleInput = 0;
                 ui.inputValue.text = "";
             }
         }
         if (doubleInput != 0)
         {
+            Debug.Log("конвертируем");
             ConvertValue();
         }
         else
         {
+            Debug.Log("ничего не введено или введен 0");
             ui.resultText.text = SaveSystem.GetText("valid_data");
         }
     }
@@ -261,8 +281,13 @@ public class Calculations : MonoBehaviour
         {
             value = Math.Round(doubleInput * staticvalue, Settings.Instance.decimalPlaces);
         }
-        
-        string result = value.ToString();
+        // получаем текущую культуру
+        CultureInfo cultureInfo = CultureInfo.CurrentCulture;
+
+        // устанавливаем формат вывода чисел
+        NumberFormatInfo numberFormat = (NumberFormatInfo)CultureInfo.CurrentCulture.NumberFormat.Clone();
+        numberFormat.NumberDecimalDigits = Settings.Instance.decimalPlaces; // количество знаков после запятой
+        string result = value.ToString("N", numberFormat);
         ui.resultText.text = result;
 
         if (Settings.Instance.inputLayer)
