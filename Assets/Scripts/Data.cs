@@ -5,8 +5,8 @@ using UnityEngine;
 
 public class Data
 {
-    public string inputValue;
-    public string resultText;
+    public double inputValue;
+    public double resultText;
     public string convertFrom_drop;
     public string convertTo_drop;
     public DateTime date;

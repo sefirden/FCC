@@ -4249,7 +4249,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &372639848
 RectTransform:
   m_ObjectHideFlags: 0
@@ -17744,6 +17744,7 @@ MonoBehaviour:
   scrollRect: {fileID: 132658741}
   scrollbarVertical: {fileID: 368686933}
   loadThreshold: 0.1
+  sort_filter: {fileID: 719025458}
   to_sort_layer: {fileID: 753269951}
   sort_layer: {fileID: 1648417211}
   sort_by_drop: {fileID: 2116222873}
@@ -17759,6 +17760,7 @@ MonoBehaviour:
   sort_spacing: {fileID: 138132148}
   sort_cancel: {fileID: 424930374}
   sort_ok: {fileID: 1692256096}
+  to_filter_layer: {fileID: 0}
 --- !u!114 &1726436902
 MonoBehaviour:
   m_ObjectHideFlags: 0

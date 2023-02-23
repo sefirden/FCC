@@ -37,6 +37,7 @@ public class UI : MonoBehaviour
 
     public List<string> dropStrings;
     private List<Data> dataList;
+    private List<Data> filtredDataList;
 
     public GameObject sampleSliderInput;
     public List<GameObject> slidersForInput;
@@ -84,6 +85,8 @@ public class UI : MonoBehaviour
 
     private bool loading;
 
+    public GameObject sort_filter;
+
     //sortlayer ui
     public Button to_sort_layer;
     public GameObject sort_layer;
@@ -97,6 +100,9 @@ public class UI : MonoBehaviour
     public GameObject sort_spacing;
     public Button sort_cancel;
     public Button sort_ok;
+
+    //filterlayer ui
+    public Button to_filter_layer;
 
 
     private void Awake()
@@ -247,14 +253,12 @@ public class UI : MonoBehaviour
 
     private async void ScrollValue()
     {
-       // float currentPosition = scrollbarVertical.value;
-
         float currentPosition = scrollRect.verticalScrollbar.value;
         float maxPosition = scrollRect.verticalScrollbar.size;
 
         if (currentPosition <= maxPosition - loadThreshold && !loading)
         {
-            if (index < dataList.Count)
+            if (index < filtredDataList.Count)
             {
                 Debug.Log("load");
                 loadingIndicator.SetActive(true);
@@ -465,19 +469,74 @@ public class UI : MonoBehaviour
         }
     }
 
-    public void ApplySort()
+    public async void ApplySort()
     {
-        Debug.Log("ApplySort");
+        try
+        {
+            foreach (Transform child in dataitemparent.transform)
+            {
+                Destroy(child.gameObject);
+            }
+        }
+        catch
+        {
+            Debug.LogError("No child found");
+        }
+
+        if (sort_desc_bool) //сортируем по убыванию
+        {
+            switch(sort_by_drop.value)
+            {
+                case 0:
+                    filtredDataList.Sort((x, y) => y.date.CompareTo(x.date));
+                    break;
+                case 1:
+                    filtredDataList.Sort((x, y) => y.inputValue.CompareTo(x.inputValue));
+                    break;
+                case 2:
+                    filtredDataList.Sort((x, y) => y.resultText.CompareTo(x.resultText));
+                    break;
+            }
+
+            loadingIndicator.SetActive(true);
+            index = 0;
+            await LoadDataAsync();
+        }
+        else
+        {
+            switch (sort_by_drop.value)
+            {
+                case 0:
+                    filtredDataList.Sort((x, y) => x.date.CompareTo(y.date));
+                    break;
+                case 1:
+                    filtredDataList.Sort((x, y) => x.inputValue.CompareTo(y.inputValue));
+                    break;
+                case 2:
+                    filtredDataList.Sort((x, y) => x.resultText.CompareTo(y.resultText));
+                    break;
+            }
+
+            loadingIndicator.SetActive(true);
+            index = 0;
+            await LoadDataAsync();
+        }
     }
 
     public void ResetSort()
+    {
+        SortDesc();
+        sort_by_drop.value = 0;
+        ApplySort();
+    }
+
+    public void ForCloseDataLayer()
     {
         if (sort_layer.activeSelf)
             ToSortLayer();
 
         SortDesc();
         sort_by_drop.value = 0;
-        ApplySort();
     }
 
     private void SetPaddingRight(GameObject tempObject)
@@ -494,6 +553,8 @@ public class UI : MonoBehaviour
         #endif
 
         dataList = new List<Data>();
+        filtredDataList = new List<Data>();
+
 
         if (File.Exists(filePath))
         {
@@ -511,6 +572,7 @@ public class UI : MonoBehaviour
 
             string json = await Task.Run(() => File.ReadAllText(filePath));
             dataList = JsonConvert.DeserializeObject<List<Data>>(json);
+            filtredDataList = dataList;
 
             if (dataList.Count == 0)
             {
@@ -519,6 +581,7 @@ public class UI : MonoBehaviour
             else
             {
                 index = 0;
+                sort_filter.SetActive(true);
                 await LoadDataAsync();
             }
 
@@ -535,6 +598,7 @@ public class UI : MonoBehaviour
         GameObject nodata = Instantiate(noDataIndicator, noDataIndicator.transform.position, Quaternion.identity, dataitemparent.transform);
         nodata.name = "nodataindicator";
 
+        sort_filter.SetActive(false);
         loadingIndicator.SetActive(false);
         ValueLayer.SetActive(false);
         DataListLayer.SetActive(true);
@@ -556,10 +620,10 @@ public class UI : MonoBehaviour
             setdata.dataValue.text = data.date.ToString("HH:mm\ndd MMM yy", CultureInfo.CurrentCulture);
 
             setdata.fromLabel.text = data.convertFrom_drop;
-            setdata.fromValue.text = data.inputValue;
+            setdata.fromValue.text = data.inputValue.ToString();
 
             setdata.toLabel.text = data.convertTo_drop;
-            setdata.toValue.text = data.resultText;
+            setdata.toValue.text = data.resultText.ToString();
         }
         ValueLayer.SetActive(false);
         DataListLayer.SetActive(true);
@@ -571,11 +635,11 @@ public class UI : MonoBehaviour
         return await Task.Run(() =>
         {
             // Код загрузки данных
-            count = Math.Min(count, dataList.Count - startIndex);
+            count = Math.Min(count, filtredDataList.Count - startIndex);
             List<Data> portionOfData = new List<Data>();
             try
             {
-                portionOfData = dataList.GetRange(startIndex, count);
+                portionOfData = filtredDataList.GetRange(startIndex, count);
             }
             catch
             {
@@ -594,9 +658,12 @@ public class UI : MonoBehaviour
             string filePath = Path.Combine(Application.persistentDataPath, "data.json");
     #else
         string filePath = Path.Combine(Application.dataPath, "data.json"); //путь к файлу с сейвами
-        #endif
+#endif
 
-        dataList.RemoveAt(indexD);
+        Data itemToRemove = filtredDataList[indexD];
+        filtredDataList.RemoveAt(indexD);
+        dataList.RemoveAll(item => ReferenceEquals(item, itemToRemove));
+
         index--;
         string newJson = JsonConvert.SerializeObject(dataList);
         await WriteTextAsync(filePath, newJson);
@@ -608,12 +675,10 @@ public class UI : MonoBehaviour
 
         StartCoroutine(ToastShow("delete_data"));
 
-        Debug.Log($"dataitemparent.transform.childCount {dataitemparent.transform.childCount}");
-        Debug.Log($"dataList.Count {dataList.Count}");
-        if (dataitemparent.transform.childCount < 10 && dataList.Count > dataitemparent.transform.childCount)
+        if (dataitemparent.transform.childCount < 10 && filtredDataList.Count > dataitemparent.transform.childCount)
         {
             Debug.Log("try to load");
-            if (indexD < dataList.Count)
+            if (indexD < filtredDataList.Count)
             {
                 loadingIndicator.SetActive(true);
                 await LoadDataAsync();
@@ -657,8 +722,8 @@ public class UI : MonoBehaviour
 
         Data data = new Data
         {
-            inputValue = input,
-            resultText = resultText.text,
+            inputValue = Convert.ToDouble(input),
+            resultText = Convert.ToDouble(resultText.text),
             convertFrom_drop = dropStrings[convertFrom_drop.value],
             convertTo_drop = dropStrings[convertTo_drop.value],
             date = DateTime.Now
@@ -677,14 +742,14 @@ public class UI : MonoBehaviour
             string filePath = Path.Combine(Application.dataPath, "data.json"); //путь к файлу с сейвами
         #endif
 
-        List<Data> dataList = new List<Data>();
+        List<Data> dataListforsave = new List<Data>();
         if (File.Exists(filePath))
         {   
             string json = await ReadFileAsync(filePath);
-            dataList = JsonConvert.DeserializeObject<List<Data>>(json);
+            dataListforsave = JsonConvert.DeserializeObject<List<Data>>(json);
         }
-        dataList.Insert(0, data);
-        string newJson = JsonConvert.SerializeObject(dataList);
+        dataListforsave.Insert(0, data);
+        string newJson = JsonConvert.SerializeObject(dataListforsave);
 
         await WriteTextAsync(filePath, newJson);
         loadingIndicator.SetActive(false);

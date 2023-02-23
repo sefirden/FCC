@@ -342,7 +342,7 @@ public class Calculations : MonoBehaviour
             SetSliderInput();
             OnSliderChange();
         }
-        ui.ResetSort();
+        ui.ForCloseDataLayer();
 
     }
 
