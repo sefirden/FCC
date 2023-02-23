@@ -227,44 +227,44 @@ public class Calculations : MonoBehaviour
         try
         {
             doubleInput = Convert.ToDouble(ui.inputValue.text);
-            Debug.Log("пробуем конвертировать в дабл");
+            //Debug.Log("пробуем конвертировать в дабл");
         }
         catch
         {
-            Debug.Log("не конвертирует первый раз");
+            //Debug.Log("не конвертирует первый раз");
             ui.inputValue.text = Regex.Replace(ui.inputValue.text, "[^0-9.,]", "");
 
             if (ui.inputValue.text.Count(x => x == '.') + ui.inputValue.text.Count(x => x == ',') > 1)
             {
-                Debug.Log("нашли две точки или запятые");
+                //Debug.Log("нашли две точки или запятые");
                 int lastIndex = ui.inputValue.text.LastIndexOfAny(new char[] { '.', ',' });
                 if (ui.inputValue.text.Substring(lastIndex).Contains(",") || ui.inputValue.text.Substring(lastIndex).Contains("."))
                 {
-                    Debug.Log("нашли вторую точку или запятую");
+                    //Debug.Log("нашли вторую точку или запятую");
                     int firstIndex = ui.inputValue.text.IndexOfAny(new char[] { '.', ',' });
                     ui.inputValue.text = ui.inputValue.text.Remove(firstIndex, 1);
                 }
             }
                 try
             {
-                Debug.Log("пробуем конвертировать в дабл второй раз");
+                //Debug.Log("пробуем конвертировать в дабл второй раз");
                 doubleInput = Convert.ToDouble(ui.inputValue.text.Replace('.', ','));
             }
             catch
             {
-                Debug.Log("не конвертирует второй раз");
+               // Debug.Log("не конвертирует второй раз");
                 doubleInput = 0;
                 ui.inputValue.text = "";
             }
         }
         if (doubleInput != 0)
         {
-            Debug.Log("конвертируем");
+           // Debug.Log("конвертируем");
             ConvertValue();
         }
         else
         {
-            Debug.Log("ничего не введено или введен 0");
+           // Debug.Log("ничего не введено или введен 0");
             ui.resultText.text = SaveSystem.GetText("valid_data");
         }
     }
@@ -342,6 +342,8 @@ public class Calculations : MonoBehaviour
             SetSliderInput();
             OnSliderChange();
         }
+        ui.ResetSort();
+
     }
 
     public void Quit() //выход из игры

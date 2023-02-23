@@ -84,6 +84,21 @@ public class UI : MonoBehaviour
 
     private bool loading;
 
+    //sortlayer ui
+    public Button to_sort_layer;
+    public GameObject sort_layer;
+    public TMP_Dropdown sort_by_drop;
+    public bool sort_by_drop_padding;
+    public bool sort_desc_bool;
+    public string[] sort_by_values;
+    public Button sort_asc;
+    public Button sort_desc;
+    public Button sort_reset;
+    public GameObject sort_spacing;
+    public Button sort_cancel;
+    public Button sort_ok;
+
+
     private void Awake()
     {
         Settings.Instance.ui = FindObjectOfType<UI>();
@@ -190,7 +205,6 @@ public class UI : MonoBehaviour
         convertTo_drop.GetComponent<RectTransform>().sizeDelta = new Vector2((width - height - spacing * 2f) / 2f, height);
         resultTextO.GetComponent<RectTransform>().sizeDelta = new Vector2((width - height - spacing), height);
 
-
         ExitSpacing.GetComponent<RectTransform>().sizeDelta = new Vector2((width - height * 3 - spacing * 3f), height);
     }
 
@@ -216,6 +230,14 @@ public class UI : MonoBehaviour
         });
 
         scrollRect.onValueChanged.AddListener(OnScrollValueChanged);
+
+        sort_by_drop_padding = true;
+        sort_desc_bool = true;
+        foreach (string s in sort_by_values)
+        {
+            var item = new TMP_Dropdown.OptionData(SaveSystem.GetText(s)); // creating dropdown item and converting texture to sprite
+            sort_by_drop.options.Add(item);
+        }
     }
 
     private void OnScrollValueChanged(Vector2 value)
@@ -333,6 +355,136 @@ public class UI : MonoBehaviour
         SaveSystem.Instance.SettingsSave();
     }
 
+    public void ToSortLayer()
+    {
+        if(sort_layer.activeSelf) //если слой сортировки уже открыт
+        {
+                ColorBlock colorBlock;
+                colorBlock = to_sort_layer.colors;
+                colorBlock.normalColor = DarkModeColors[3];
+                colorBlock.highlightedColor = DarkModeColors[3];
+                colorBlock.selectedColor = DarkModeColors[3];
+                to_sort_layer.colors = colorBlock;
+            
+            sort_layer.SetActive(false);
+        }
+        else
+        {
+            if (Settings.Instance.darkMode)
+            {
+                ColorBlock colorBlock;
+                colorBlock = to_sort_layer.colors;
+                colorBlock.normalColor = DarkModeColors[1];
+                colorBlock.highlightedColor = DarkModeColors[1];
+                colorBlock.selectedColor = DarkModeColors[1];
+                to_sort_layer.colors = colorBlock;                
+            }                
+            else
+            {
+                ColorBlock colorBlock;
+                colorBlock = to_sort_layer.colors;
+                colorBlock.normalColor = ColorSwap[Settings.Instance.themeColor];
+                colorBlock.highlightedColor = ColorSwap[Settings.Instance.themeColor];
+                colorBlock.selectedColor = ColorSwap[Settings.Instance.themeColor];
+                to_sort_layer.colors = colorBlock;
+            }
+
+            sort_layer.SetActive(true);
+            sort_by_drop.GetComponent<RectTransform>().sizeDelta = new Vector2(SuperWidth - (16f + 36f + 10f) * 2, 52f);
+            sort_spacing.GetComponent<RectTransform>().sizeDelta = new Vector2(SuperWidth - (36f + 50f) * 3 - 16f * 2, 52f);
+
+            if (sort_by_drop_padding)
+            {
+                SetPaddingRight(sort_by_drop.transform.GetChild(0).gameObject);
+                sort_by_drop_padding = false;
+            }
+
+            if (sort_desc_bool)
+                SortDesc();
+            else
+                SortAsc();
+        }
+    }
+
+    public void SortAsc()
+    {
+        sort_desc_bool = false;
+        ColorBlock colorBlock;
+
+        colorBlock = sort_desc.colors;
+        colorBlock.normalColor = DarkModeColors[3];
+        colorBlock.highlightedColor = DarkModeColors[3];
+        colorBlock.selectedColor = DarkModeColors[3];
+        sort_desc.colors = colorBlock;
+
+        if (Settings.Instance.darkMode)
+        {
+            colorBlock = sort_asc.colors;
+            colorBlock.normalColor = DarkModeColors[1];
+            colorBlock.highlightedColor = DarkModeColors[1];
+            colorBlock.selectedColor = DarkModeColors[1];
+            sort_asc.colors = colorBlock;
+        }
+        else
+        {
+            colorBlock = sort_asc.colors;
+            colorBlock.normalColor = ColorSwap[Settings.Instance.themeColor];
+            colorBlock.highlightedColor = ColorSwap[Settings.Instance.themeColor];
+            colorBlock.selectedColor = ColorSwap[Settings.Instance.themeColor];
+            sort_asc.colors = colorBlock;
+        }
+
+    }
+
+    public void SortDesc()
+    {
+        sort_desc_bool = true;
+        ColorBlock colorBlock;
+
+        colorBlock = sort_asc.colors;
+        colorBlock.normalColor = DarkModeColors[3];
+        colorBlock.highlightedColor = DarkModeColors[3];
+        colorBlock.selectedColor = DarkModeColors[3];
+        sort_asc.colors = colorBlock;
+
+        if (Settings.Instance.darkMode)
+        {
+            colorBlock = sort_desc.colors;
+            colorBlock.normalColor = DarkModeColors[1];
+            colorBlock.highlightedColor = DarkModeColors[1];
+            colorBlock.selectedColor = DarkModeColors[1];
+            sort_desc.colors = colorBlock;
+        }
+        else
+        {
+            colorBlock = sort_desc.colors;
+            colorBlock.normalColor = ColorSwap[Settings.Instance.themeColor];
+            colorBlock.highlightedColor = ColorSwap[Settings.Instance.themeColor];
+            colorBlock.selectedColor = ColorSwap[Settings.Instance.themeColor];
+            sort_desc.colors = colorBlock;
+        }
+    }
+
+    public void ApplySort()
+    {
+        Debug.Log("ApplySort");
+    }
+
+    public void ResetSort()
+    {
+        if (sort_layer.activeSelf)
+            ToSortLayer();
+
+        SortDesc();
+        sort_by_drop.value = 0;
+        ApplySort();
+    }
+
+    private void SetPaddingRight(GameObject tempObject)
+    {
+        tempObject.transform.localPosition = new Vector3(tempObject.transform.localPosition.x + (tempObject.gameObject.GetComponent<RectTransform>().rect.width / 2), tempObject.transform.localPosition.y, tempObject.transform.localPosition.z);   
+    }
+
     public async void SetDataToList()
     {
         #if UNITY_ANDROID && !UNITY_EDITOR
@@ -433,7 +585,6 @@ public class UI : MonoBehaviour
             
         });
     }
-
 
     public async void DeleteData(int indexD)
     {
