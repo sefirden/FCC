@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class SetWidth : MonoBehaviour
 {
     public UI ui;
+    public float padding;
 
     void Awake()
     {
@@ -13,6 +14,6 @@ public class SetWidth : MonoBehaviour
 
         float width = ui.SuperWidth;
         float height = gameObject.GetComponent<RectTransform>().rect.height;
-        gameObject.GetComponent<RectTransform>().sizeDelta = new Vector2(width, height);
+        gameObject.GetComponent<RectTransform>().sizeDelta = new Vector2(width-padding, height);
     }
 }

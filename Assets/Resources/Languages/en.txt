@@ -20,6 +20,7 @@ no_data-There is no saved data
 save_data-Data saved successfully
 delete_data-Data deleted successfully
 sort_by-Sort by
-sort_date-Date
-sort_from-Entered data
-sort_to-Results
+sort_filter_date-Date
+sort_filter_from-Entered data
+sort_filter_to-Results
+filter_by-Filter by

@@ -20,6 +20,7 @@ no_data-Немає збережених даних
 save_data-Дані успішно збережені
 delete_data-Дані успішно видалені
 sort_by-Сортувати за
-sort_date-Датою
-sort_from-Введеними даними
-sort_to-Результатами
+sort_filter_date-Дата
+sort_filter_from-Введені дані
+sort_filter_to-Результати
+filter_by-Фільтрувати за

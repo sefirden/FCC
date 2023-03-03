@@ -96,13 +96,21 @@ public class UI : MonoBehaviour
     public string[] sort_by_values;
     public Button sort_asc;
     public Button sort_desc;
-    public Button sort_reset;
     public GameObject sort_spacing;
-    public Button sort_cancel;
-    public Button sort_ok;
+
 
     //filterlayer ui
     public Button to_filter_layer;
+    public GameObject filter_layer;
+    public Button filter_from_drop;
+    public GameObject filter_from_drop_value_layer;
+    public TMP_InputField filter_from_min;
+    public TMP_InputField filter_from_max;
+    public Button filter_to_drop;
+    public GameObject filter_to_drop_value_layer;
+    public TMP_InputField filter_to_min;
+    public TMP_InputField filter_to_max;
+    public GameObject filter_spacing;
 
 
     private void Awake()
@@ -359,6 +367,7 @@ public class UI : MonoBehaviour
         SaveSystem.Instance.SettingsSave();
     }
 
+    //sortlayer
     public void ToSortLayer()
     {
         if(sort_layer.activeSelf) //если слой сортировки уже открыт
@@ -395,11 +404,11 @@ public class UI : MonoBehaviour
 
             sort_layer.SetActive(true);
             sort_by_drop.GetComponent<RectTransform>().sizeDelta = new Vector2(SuperWidth - (16f + 36f + 10f) * 2, 52f);
-            sort_spacing.GetComponent<RectTransform>().sizeDelta = new Vector2(SuperWidth - (36f + 50f) * 3 - 16f * 2, 52f);
+            sort_spacing.GetComponent<RectTransform>().sizeDelta = new Vector2(SuperWidth - (36f + 50f) * 3 - 16f * 2, 36f);
 
             if (sort_by_drop_padding)
             {
-                SetPaddingRight(sort_by_drop.transform.GetChild(0).gameObject);
+                StartCoroutine(SetPaddingRight(sort_by_drop.transform.GetChild(0).gameObject));
                 sort_by_drop_padding = false;
             }
 
@@ -530,17 +539,85 @@ public class UI : MonoBehaviour
         ApplySort();
     }
 
+
+    //filterlayer
+    public void ToFilterLayer()
+    {
+        if (filter_layer.activeSelf) //если слой сортировки уже открыт
+        {
+            ColorBlock colorBlock;
+            colorBlock = to_filter_layer.colors;
+            colorBlock.normalColor = DarkModeColors[3];
+            colorBlock.highlightedColor = DarkModeColors[3];
+            colorBlock.selectedColor = DarkModeColors[3];
+            to_filter_layer.colors = colorBlock;
+
+            filter_layer.SetActive(false);
+        }
+        else
+        {
+            if (Settings.Instance.darkMode)
+            {
+                ColorBlock colorBlock;
+                colorBlock = to_filter_layer.colors;
+                colorBlock.normalColor = DarkModeColors[1];
+                colorBlock.highlightedColor = DarkModeColors[1];
+                colorBlock.selectedColor = DarkModeColors[1];
+                to_filter_layer.colors = colorBlock;
+            }
+            else
+            {
+                ColorBlock colorBlock;
+                colorBlock = to_filter_layer.colors;
+                colorBlock.normalColor = ColorSwap[Settings.Instance.themeColor];
+                colorBlock.highlightedColor = ColorSwap[Settings.Instance.themeColor];
+                colorBlock.selectedColor = ColorSwap[Settings.Instance.themeColor];
+                to_filter_layer.colors = colorBlock;
+            }
+
+            filter_layer.SetActive(true);
+
+            //set items size
+            filter_from_drop.GetComponent<RectTransform>().sizeDelta = new Vector2((SuperWidth - (16f + 16f + 40f)) * 0.4f, 52f);
+            filter_from_min.GetComponent<RectTransform>().sizeDelta = new Vector2((SuperWidth - (16f + 16f + 40f)) * 0.3f, 48f);
+            filter_from_max.GetComponent<RectTransform>().sizeDelta = new Vector2((SuperWidth - (16f + 16f + 40f)) * 0.3f, 48f);
+
+            filter_to_drop.GetComponent<RectTransform>().sizeDelta = new Vector2((SuperWidth - (16f + 16f + 40f)) * 0.4f, 52f);
+            filter_to_min.GetComponent<RectTransform>().sizeDelta = new Vector2((SuperWidth - (16f + 16f + 40f)) * 0.3f, 48f);
+            filter_to_max.GetComponent<RectTransform>().sizeDelta = new Vector2((SuperWidth - (16f + 16f + 40f)) * 0.3f, 48f);
+
+            filter_spacing.GetComponent<RectTransform>().sizeDelta = new Vector2(SuperWidth - (36f + 50f) * 3 - 16f * 2, 36f);
+        }
+    }
+
+    public async void ApplyFilter()
+    {
+        Debug.Log("Apply filter");
+        //await 
+    }
+
+    public void ResetFilter()
+    {
+        Debug.Log("Reset filter");
+    }
+
+
+
     public void ForCloseDataLayer()
     {
         if (sort_layer.activeSelf)
             ToSortLayer();
 
+        if (filter_layer.activeSelf)
+            ToFilterLayer();
+
         SortDesc();
         sort_by_drop.value = 0;
     }
 
-    private void SetPaddingRight(GameObject tempObject)
+    private IEnumerator SetPaddingRight(GameObject tempObject)
     {
+        yield return new WaitForEndOfFrame();
         tempObject.transform.localPosition = new Vector3(tempObject.transform.localPosition.x + (tempObject.gameObject.GetComponent<RectTransform>().rect.width / 2), tempObject.transform.localPosition.y, tempObject.transform.localPosition.z);   
     }
 
