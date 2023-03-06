@@ -10,6 +10,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using System.Threading.Tasks;
 using System.Globalization;
+using System.Linq;
 
 
 
@@ -102,15 +103,22 @@ public class UI : MonoBehaviour
     //filterlayer ui
     public Button to_filter_layer;
     public GameObject filter_layer;
+    public Button filter_date_min;
+    public GameObject filter_date_min_layer;
+    public Button filter_date_max;
+    public GameObject filter_date_max_layer;
     public Button filter_from_drop;
     public GameObject filter_from_drop_value_layer;
+    public GameObject filter_from_drop_content;
     public TMP_InputField filter_from_min;
     public TMP_InputField filter_from_max;
     public Button filter_to_drop;
     public GameObject filter_to_drop_value_layer;
+    public GameObject filter_to_drop_content;
     public TMP_InputField filter_to_min;
     public TMP_InputField filter_to_max;
     public GameObject filter_spacing;
+    public GameObject sample_drop_item;
 
 
     private void Awake()
@@ -586,7 +594,137 @@ public class UI : MonoBehaviour
             filter_to_min.GetComponent<RectTransform>().sizeDelta = new Vector2((SuperWidth - (16f + 16f + 40f)) * 0.3f, 48f);
             filter_to_max.GetComponent<RectTransform>().sizeDelta = new Vector2((SuperWidth - (16f + 16f + 40f)) * 0.3f, 48f);
 
+            filter_date_min.GetComponent<RectTransform>().sizeDelta = new Vector2((SuperWidth - (16f + 16f + 30f)) * 0.5f, 48f);
+            filter_date_max.GetComponent<RectTransform>().sizeDelta = new Vector2((SuperWidth - (16f + 16f + 30f)) * 0.5f, 48f);
+
+
             filter_spacing.GetComponent<RectTransform>().sizeDelta = new Vector2(SuperWidth - (36f + 50f) * 3 - 16f * 2, 36f);
+
+            SetBasicValueToFilter();
+
+        }
+    }
+
+    private void SetBasicValueToFilter()
+    {
+        //filter_from_min.text = filtredDataList.FindAll(x => x.from > 18 && x.gender == "Male");
+        double maxInputValue = double.MinValue;
+        double minInputValue = double.MaxValue;
+        double maxResultText = double.MinValue;
+        double minResultText = double.MaxValue;
+        DateTime maxDate = DateTime.MinValue;
+        DateTime minDate = DateTime.MaxValue;
+
+        foreach (var item in filtredDataList)
+        {
+            if (item.inputValue > maxInputValue)
+                maxInputValue = item.inputValue;
+            if (item.inputValue < minInputValue)
+                minInputValue = item.inputValue;
+            if (item.resultText > maxResultText)
+                maxResultText = item.resultText;
+            if (item.resultText < minResultText)
+                minResultText = item.resultText;
+            if (item.date > maxDate)
+                maxDate = item.date;
+            if (item.date < minDate)
+                minDate = item.date;
+        }
+
+        filter_from_min.text = Convert.ToString(minInputValue);
+        filter_from_max.text = Convert.ToString(maxInputValue);
+
+        filter_to_min.text = Convert.ToString(minResultText);
+        filter_to_max.text = Convert.ToString(maxResultText);
+
+        filter_date_min.GetComponentInChildren<TMP_Text>().text = minDate.ToString("dd MMM yy", CultureInfo.CurrentCulture);
+        filter_date_max.GetComponentInChildren<TMP_Text>().text = maxDate.ToString("dd MMM yy", CultureInfo.CurrentCulture);
+
+        var uniqueConvertFromValues = filtredDataList.Select(data => data.convertFrom_drop).Distinct().ToList();
+        string filter_from_drop_text = "";
+        if (uniqueConvertFromValues.Count > 1)
+        {
+            filter_from_drop_text = SaveSystem.GetText("multiple_values");
+        }
+        else 
+        { 
+            foreach (var item in uniqueConvertFromValues)
+            {
+                filter_from_drop_text = item;
+            }
+        }
+
+        foreach (Transform child in filter_from_drop_content.transform)
+        {
+            Destroy(child.gameObject);
+        }
+
+        foreach (var item in uniqueConvertFromValues)
+        {
+            GameObject item_temp = Instantiate(sample_drop_item, filter_from_drop_content.transform.position, Quaternion.identity, filter_from_drop_content.transform);
+            item_temp.name = "item_temp";
+            item_temp.GetComponentInChildren<TMP_Text>().text = item.ToString();
+            item_temp.GetComponent<RectTransform>().sizeDelta = new Vector2(filter_from_drop.GetComponent<RectTransform>().rect.width, 28f);
+        }
+
+        filter_from_drop.GetComponentInChildren<TMP_Text>().text = filter_from_drop_text;
+        filter_from_drop_value_layer.GetComponent<RectTransform>().sizeDelta = new Vector2(0, 28f * (uniqueConvertFromValues.Count)+4f);
+
+
+
+
+        var uniqueConvertToValues = filtredDataList.Select(data => data.convertTo_drop).Distinct().ToList();
+        string filter_to_drop_text = "";
+        if (uniqueConvertToValues.Count > 1)
+        {
+            filter_to_drop_text = SaveSystem.GetText("multiple_values");
+        }
+        else
+        {
+            foreach (var item in uniqueConvertToValues)
+            {
+                filter_to_drop_text = item;
+            }
+        }
+
+        foreach (Transform child in filter_to_drop_content.transform)
+        {
+            Destroy(child.gameObject);
+        }
+
+        foreach (var item in uniqueConvertToValues)
+        {
+            GameObject item_temp = Instantiate(sample_drop_item, filter_to_drop_content.transform.position, Quaternion.identity, filter_to_drop_content.transform);
+            item_temp.name = "item_temp";
+            item_temp.GetComponentInChildren<TMP_Text>().text = item.ToString();
+            item_temp.GetComponent<RectTransform>().sizeDelta = new Vector2(filter_to_drop.GetComponent<RectTransform>().rect.width, 28f);
+        }
+
+        filter_to_drop.GetComponentInChildren<TMP_Text>().text = filter_to_drop_text;
+        filter_to_drop_value_layer.GetComponent<RectTransform>().sizeDelta = new Vector2(0, 28f * (uniqueConvertToValues.Count) + 4f);
+    }
+
+    public void FilterFromDropOpenClose()
+    {
+        if (filter_from_drop_value_layer.activeSelf)
+        {
+            filter_from_drop_value_layer.SetActive(false);
+        }
+        else
+        {
+            filter_from_drop_value_layer.SetActive(true);
+        }
+    }
+
+    public void FilterToDropOpenClose()
+    {
+        if (filter_to_drop_value_layer.activeSelf)
+        {
+            filter_to_drop_value_layer.SetActive(false);
+        }
+        else
+        {
+            filter_to_drop_value_layer.SetActive(true);
         }
     }
 

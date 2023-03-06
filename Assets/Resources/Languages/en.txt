@@ -24,3 +24,4 @@ sort_filter_date-Date
 sort_filter_from-Entered data
 sort_filter_to-Results
 filter_by-Filter by
+multiple_values-Multiple values
