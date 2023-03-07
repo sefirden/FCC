@@ -104,6 +104,8 @@ public class UI : MonoBehaviour
     public Button to_filter_layer;
     public GameObject filter_layer;
     public Button filter_date_min;
+    public DateTime maxDate;
+    public DateTime minDate;
     public GameObject filter_date_min_layer;
     public Button filter_date_max;
     public GameObject filter_date_max_layer;
@@ -612,8 +614,8 @@ public class UI : MonoBehaviour
         double minInputValue = double.MaxValue;
         double maxResultText = double.MinValue;
         double minResultText = double.MaxValue;
-        DateTime maxDate = DateTime.MinValue;
-        DateTime minDate = DateTime.MaxValue;
+        maxDate = DateTime.MinValue;
+        minDate = DateTime.MaxValue;
 
         foreach (var item in filtredDataList)
         {
@@ -637,8 +639,8 @@ public class UI : MonoBehaviour
         filter_to_min.text = Convert.ToString(minResultText);
         filter_to_max.text = Convert.ToString(maxResultText);
 
-        filter_date_min.GetComponentInChildren<TMP_Text>().text = minDate.ToString("dd MMM yy", CultureInfo.CurrentCulture);
-        filter_date_max.GetComponentInChildren<TMP_Text>().text = maxDate.ToString("dd MMM yy", CultureInfo.CurrentCulture);
+        filter_date_min.GetComponentInChildren<TMP_Text>().text = minDate.ToString("dd MMM yyyy", CultureInfo.CurrentCulture);
+        filter_date_max.GetComponentInChildren<TMP_Text>().text = maxDate.ToString("dd MMM yyyy", CultureInfo.CurrentCulture);
 
         var uniqueConvertFromValues = filtredDataList.Select(data => data.convertFrom_drop).Distinct().ToList();
         string filter_from_drop_text = "";
@@ -706,14 +708,14 @@ public class UI : MonoBehaviour
 
     public void FilterFromDropOpenClose()
     {
-        if (filter_from_drop_value_layer.activeSelf)
-        {
+       if (filter_from_drop_value_layer.activeSelf)
+       {
             filter_from_drop_value_layer.SetActive(false);
-        }
-        else
-        {
+       }
+       else
+       {
             filter_from_drop_value_layer.SetActive(true);
-        }
+       }
     }
 
     public void FilterToDropOpenClose()
