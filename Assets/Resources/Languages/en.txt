@@ -13,7 +13,7 @@ classic-Classic input
 invert_slider-Invert slider input
 color-Interface color
 darkmode-Dark theme
-valid_data-enter valid data
+valid_data-Enter valid data
 datalist-Saved results
 date-Date
 no_data-There is no saved data

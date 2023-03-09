@@ -9,14 +9,22 @@ using UnityEngine;
 using UnityEngine.PlayerLoop;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using static System.Net.Mime.MediaTypeNames;
 
 public class InputChecker : MonoBehaviour
 {
     public TMP_InputField inputField;
     public double doubleInput;
+    public UI ui; //скрипт уи
 
-    public void OnInputChange() //для инпут поля
+    void Awake()
     {
+        ui = FindObjectOfType<UI>();
+    }
+
+        public void OnInputChange() //для инпут поля
+        {
+
         try
         {
             doubleInput = Convert.ToDouble(inputField.text);
@@ -46,7 +54,8 @@ public class InputChecker : MonoBehaviour
             {
                 // Debug.Log("не конвертирует второй раз");
                 doubleInput = 0;
-                inputField.text = "";
+                inputField.text = "0";
+                StartCoroutine(ui.ToastShow("valid_data"));
             }
         }
     }

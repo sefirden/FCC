@@ -106,15 +106,15 @@ public class UI : MonoBehaviour
     public Button filter_date_min;
     public DateTime maxDate;
     public DateTime minDate;
-    public GameObject filter_date_min_layer;
     public Button filter_date_max;
-    public GameObject filter_date_max_layer;
     public Button filter_from_drop;
+    public List<string> uniqueConvertFromValues;
     public GameObject filter_from_drop_value_layer;
     public GameObject filter_from_drop_content;
     public TMP_InputField filter_from_min;
     public TMP_InputField filter_from_max;
     public Button filter_to_drop;
+    public List<string> uniqueConvertToValues;
     public GameObject filter_to_drop_value_layer;
     public GameObject filter_to_drop_content;
     public TMP_InputField filter_to_min;
@@ -609,7 +609,6 @@ public class UI : MonoBehaviour
 
     private void SetBasicValueToFilter()
     {
-        //filter_from_min.text = filtredDataList.FindAll(x => x.from > 18 && x.gender == "Male");
         double maxInputValue = double.MinValue;
         double minInputValue = double.MaxValue;
         double maxResultText = double.MinValue;
@@ -642,7 +641,8 @@ public class UI : MonoBehaviour
         filter_date_min.GetComponentInChildren<TMP_Text>().text = minDate.ToString("dd MMM yyyy", CultureInfo.CurrentCulture);
         filter_date_max.GetComponentInChildren<TMP_Text>().text = maxDate.ToString("dd MMM yyyy", CultureInfo.CurrentCulture);
 
-        var uniqueConvertFromValues = filtredDataList.Select(data => data.convertFrom_drop).Distinct().ToList();
+        uniqueConvertFromValues.Clear();
+        uniqueConvertFromValues = filtredDataList.Select(data => data.convertFrom_drop).Distinct().ToList();
         string filter_from_drop_text = "";
         if (uniqueConvertFromValues.Count > 1)
         {
@@ -667,6 +667,10 @@ public class UI : MonoBehaviour
             item_temp.name = "item_temp";
             item_temp.GetComponentInChildren<TMP_Text>().text = item.ToString();
             item_temp.GetComponent<RectTransform>().sizeDelta = new Vector2(filter_from_drop.GetComponent<RectTransform>().rect.width, 28f);
+
+            item_temp.GetComponent<Toggle>().onValueChanged.AddListener(delegate {
+                OnToggleConvertFromValueChanged(item_temp.GetComponent<Toggle>());
+            });
         }
 
         filter_from_drop.GetComponentInChildren<TMP_Text>().text = filter_from_drop_text;
@@ -674,8 +678,8 @@ public class UI : MonoBehaviour
 
 
 
-
-        var uniqueConvertToValues = filtredDataList.Select(data => data.convertTo_drop).Distinct().ToList();
+        uniqueConvertToValues.Clear();
+        uniqueConvertToValues = filtredDataList.Select(data => data.convertTo_drop).Distinct().ToList();
         string filter_to_drop_text = "";
         if (uniqueConvertToValues.Count > 1)
         {
@@ -700,10 +704,82 @@ public class UI : MonoBehaviour
             item_temp.name = "item_temp";
             item_temp.GetComponentInChildren<TMP_Text>().text = item.ToString();
             item_temp.GetComponent<RectTransform>().sizeDelta = new Vector2(filter_to_drop.GetComponent<RectTransform>().rect.width, 28f);
+
+            item_temp.GetComponent<Toggle>().onValueChanged.AddListener(delegate {
+                OnToggleConvertToValueChanged(item_temp.GetComponent<Toggle>());
+            });
         }
 
         filter_to_drop.GetComponentInChildren<TMP_Text>().text = filter_to_drop_text;
         filter_to_drop_value_layer.GetComponent<RectTransform>().sizeDelta = new Vector2(0, 28f * (uniqueConvertToValues.Count) + 4f);
+    }
+
+    public void OnToggleConvertFromValueChanged(Toggle toggle)
+    {
+        if (toggle.isOn)
+        {
+            string toggleText = toggle.GetComponentInChildren<TMP_Text>().text;
+            if (!uniqueConvertFromValues.Contains(toggleText))
+            {
+                uniqueConvertFromValues.Add(toggleText);
+            }
+        }
+        else
+        {
+            string toggleText = toggle.GetComponentInChildren<TMP_Text>().text;
+            if (uniqueConvertFromValues.Contains(toggleText))
+            {
+                uniqueConvertFromValues.Remove(toggleText);
+            }
+        }
+
+        string filter_from_drop_text = "";
+        if (uniqueConvertFromValues.Count > 1)
+        {
+            filter_from_drop_text = SaveSystem.GetText("multiple_values");
+        }
+        else
+        {
+            foreach (var item in uniqueConvertFromValues)
+            {
+                filter_from_drop_text = item;
+            }
+        }
+        filter_from_drop.GetComponentInChildren<TMP_Text>().text = filter_from_drop_text;
+    }
+
+    public void OnToggleConvertToValueChanged(Toggle toggle)
+    {
+        if (toggle.isOn)
+        {
+            string toggleText = toggle.GetComponentInChildren<TMP_Text>().text;
+            if (!uniqueConvertToValues.Contains(toggleText))
+            {
+                uniqueConvertToValues.Add(toggleText);
+            }
+        }
+        else
+        {
+            string toggleText = toggle.GetComponentInChildren<TMP_Text>().text;
+            if (uniqueConvertToValues.Contains(toggleText))
+            {
+                uniqueConvertToValues.Remove(toggleText);
+            }
+        }
+
+        string filter_to_drop_text = "";
+        if (uniqueConvertToValues.Count > 1)
+        {
+            filter_to_drop_text = SaveSystem.GetText("multiple_values");
+        }
+        else
+        {
+            foreach (var item in uniqueConvertToValues)
+            {
+                filter_to_drop_text = item;
+            }
+        }
+        filter_to_drop.GetComponentInChildren<TMP_Text>().text = filter_to_drop_text;
     }
 
     public void FilterFromDropOpenClose()
@@ -733,6 +809,7 @@ public class UI : MonoBehaviour
     public async void ApplyFilter()
     {
         Debug.Log("Apply filter");
+        //filter_from_min.text = filtredDataList.FindAll(x => x.from > 18 && x.gender == "Male");
         //await 
     }
 
@@ -918,7 +995,7 @@ public class UI : MonoBehaviour
         loading = false;
     }
 
-    private IEnumerator ToastShow(string temptext)
+    public IEnumerator ToastShow(string temptext)
     {
         Toast.SetActive(true);
         string toasttext = SaveSystem.GetText(temptext);

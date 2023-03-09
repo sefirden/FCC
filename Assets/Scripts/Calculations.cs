@@ -41,6 +41,8 @@ public class Calculations : MonoBehaviour
             ConvertValue();
         });
 
+        FindStaticvalue();
+
         if (Settings.Instance.inputLayer)
         {
             ui.ClassicInput.SetActive(true);
@@ -58,8 +60,6 @@ public class Calculations : MonoBehaviour
             SetSliderInput();
             OnSliderChange();
         }
-
-        FindStaticvalue();
     }
 
     private void Start()
@@ -175,7 +175,8 @@ public class Calculations : MonoBehaviour
         }
         else
         {
-            ui.resultText.text = SaveSystem.GetText("valid_data");
+            ui.resultText.text = "0";
+            StartCoroutine(ui.ToastShow("valid_data"));
         }
     }
 
@@ -255,6 +256,7 @@ public class Calculations : MonoBehaviour
                // Debug.Log("не конвертирует второй раз");
                 doubleInput = 0;
                 ui.inputValue.text = "";
+                StartCoroutine(ui.ToastShow("valid_data"));
             }
         }
         if (doubleInput != 0)
@@ -265,7 +267,8 @@ public class Calculations : MonoBehaviour
         else
         {
            // Debug.Log("ничего не введено или введен 0");
-            ui.resultText.text = SaveSystem.GetText("valid_data");
+            ui.resultText.text = "0";
+            StartCoroutine(ui.ToastShow("valid_data"));
         }
     }
 

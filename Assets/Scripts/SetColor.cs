@@ -70,7 +70,7 @@ public class SetColor : MonoBehaviour
             
     }
 
-    private void ColorImage()
+    public void ColorImage()
     {
         if (Settings.Instance.darkMode)
         {
@@ -106,7 +106,7 @@ public class SetColor : MonoBehaviour
 
 
 
-    private void ColorAllColors()
+    public void ColorAllColors()
     {
         if (Settings.Instance.darkMode)
         {
