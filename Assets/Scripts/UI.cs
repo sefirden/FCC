@@ -540,6 +540,9 @@ public class UI : MonoBehaviour
             index = 0;
             await LoadDataAsync();
         }
+
+        ToSortLayer();
+        StartCoroutine(ToastShow("sorted"));
     }
 
     public void ResetSort()
@@ -616,7 +619,7 @@ public class UI : MonoBehaviour
         maxDate = DateTime.MinValue;
         minDate = DateTime.MaxValue;
 
-        foreach (var item in filtredDataList)
+        foreach (var item in dataList)
         {
             if (item.inputValue > maxInputValue)
                 maxInputValue = item.inputValue;
@@ -642,7 +645,7 @@ public class UI : MonoBehaviour
         filter_date_max.GetComponentInChildren<TMP_Text>().text = maxDate.ToString("dd MMM yyyy", CultureInfo.CurrentCulture);
 
         uniqueConvertFromValues.Clear();
-        uniqueConvertFromValues = filtredDataList.Select(data => data.convertFrom_drop).Distinct().ToList();
+        uniqueConvertFromValues = dataList.Select(data => data.convertFrom_drop).Distinct().ToList();
         string filter_from_drop_text = "";
         if (uniqueConvertFromValues.Count > 1)
         {
@@ -679,7 +682,7 @@ public class UI : MonoBehaviour
 
 
         uniqueConvertToValues.Clear();
-        uniqueConvertToValues = filtredDataList.Select(data => data.convertTo_drop).Distinct().ToList();
+        uniqueConvertToValues = dataList.Select(data => data.convertTo_drop).Distinct().ToList();
         string filter_to_drop_text = "";
         if (uniqueConvertToValues.Count > 1)
         {
@@ -808,14 +811,61 @@ public class UI : MonoBehaviour
 
     public async void ApplyFilter()
     {
-        Debug.Log("Apply filter");
-        //filter_from_min.text = filtredDataList.FindAll(x => x.from > 18 && x.gender == "Male");
-        //await 
+        // Проверяем, что все минимальные значения меньше или равны максимальным значениям
+        if (double.Parse(filter_from_min.text) > double.Parse(filter_from_max.text))
+        {
+            Debug.LogError("Ошибка: минимальное значение больше максимального для параметра filter_from");
+            return; // прекращаем фильтрацию
+        }
+        if (double.Parse(filter_to_min.text) > double.Parse(filter_to_max.text))
+        {
+            Debug.LogError("Ошибка: минимальное значение больше максимального для параметра filter_to");
+            return; // прекращаем фильтрацию
+        }
+        if (minDate > maxDate)
+        {
+            Debug.LogError("Ошибка: минимальное значение больше максимального для параметра date");
+            return; // прекращаем фильтрацию
+        }
+
+        try
+        {
+            foreach (Transform child in dataitemparent.transform)
+            {
+                Destroy(child.gameObject);
+            }
+        }
+        catch
+        {
+            Debug.LogError("No child found");
+        }
+
+        loadingIndicator.SetActive(true);
+        index = 0;
+
+        filtredDataList = dataList.Where(data =>
+    data.inputValue >= double.Parse(filter_from_min.text) && data.inputValue <= double.Parse(filter_from_max.text) &&
+    data.resultText >= double.Parse(filter_to_min.text) && data.resultText <= double.Parse(filter_to_max.text) &&
+    uniqueConvertFromValues.Contains(data.convertFrom_drop) &&
+    uniqueConvertToValues.Contains(data.convertTo_drop) &&
+    data.date >= minDate && data.date <= maxDate
+        ).ToList();
+
+        await LoadDataAsync();
+
+        if (filtredDataList.Count == 0)
+        {
+            NoDataIndicator();
+        }
+        sort_filter.SetActive(true);
+        ToFilterLayer();
+        StartCoroutine(ToastShow("filtred"));
+
     }
 
     public void ResetFilter()
     {
-        Debug.Log("Reset filter");
+        SetBasicValueToFilter();
     }
 
 

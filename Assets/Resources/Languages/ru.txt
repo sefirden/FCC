@@ -25,3 +25,5 @@ sort_filter_from-Введенные данные
 sort_filter_to-Результаты
 filter_by-Фильтровать за
 multiple_values-Несколько значений
+sorted-Данные отсортированы
+filtred-Данные отфильтрованы
