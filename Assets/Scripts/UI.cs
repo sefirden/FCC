@@ -811,21 +811,27 @@ public class UI : MonoBehaviour
 
     public async void ApplyFilter()
     {
-        // Проверяем, что все минимальные значения меньше или равны максимальным значениям
+        bool hasError = false;
+
         if (double.Parse(filter_from_min.text) > double.Parse(filter_from_max.text))
         {
-            Debug.LogError("Ошибка: минимальное значение больше максимального для параметра filter_from");
-            return; // прекращаем фильтрацию
+            StartCoroutine(ErrorShow(filter_from_min.gameObject, filter_from_max.gameObject));
+            hasError = true;
         }
         if (double.Parse(filter_to_min.text) > double.Parse(filter_to_max.text))
         {
-            Debug.LogError("Ошибка: минимальное значение больше максимального для параметра filter_to");
-            return; // прекращаем фильтрацию
+            StartCoroutine(ErrorShow(filter_to_min.gameObject, filter_to_max.gameObject));
+            hasError = true;
         }
         if (minDate > maxDate)
         {
-            Debug.LogError("Ошибка: минимальное значение больше максимального для параметра date");
-            return; // прекращаем фильтрацию
+            StartCoroutine(ErrorShow(filter_date_min.gameObject, filter_date_max.gameObject));
+            hasError = true;
+        }
+
+        if (hasError)
+        {
+            return;
         }
 
         try
@@ -868,6 +874,15 @@ public class UI : MonoBehaviour
         SetBasicValueToFilter();
     }
 
+    public IEnumerator ErrorShow(GameObject min, GameObject max)
+    {
+        min.transform.Find("error").gameObject.SetActive(true);
+        max.transform.Find("error").gameObject.SetActive(true);
+        yield return new WaitForSecondsRealtime(2f);
+
+        min.transform.Find("error").gameObject.SetActive(false);
+        max.transform.Find("error").gameObject.SetActive(false);
+    }
 
 
     public void ForCloseDataLayer()
