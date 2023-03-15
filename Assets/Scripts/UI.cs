@@ -543,6 +543,12 @@ public class UI : MonoBehaviour
 
         ToSortLayer();
         StartCoroutine(ToastShow("sorted"));
+
+        if (filtredDataList.Count == 0)
+        {
+            NoDataIndicator();
+            sort_filter.SetActive(true);
+        }
     }
 
     public void ResetSort()
@@ -736,7 +742,7 @@ public class UI : MonoBehaviour
             }
         }
 
-        string filter_from_drop_text = "";
+        string filter_from_drop_text = "-";
         if (uniqueConvertFromValues.Count > 1)
         {
             filter_from_drop_text = SaveSystem.GetText("multiple_values");
@@ -748,6 +754,7 @@ public class UI : MonoBehaviour
                 filter_from_drop_text = item;
             }
         }
+
         filter_from_drop.GetComponentInChildren<TMP_Text>().text = filter_from_drop_text;
     }
 
@@ -770,7 +777,7 @@ public class UI : MonoBehaviour
             }
         }
 
-        string filter_to_drop_text = "";
+        string filter_to_drop_text = "-";
         if (uniqueConvertToValues.Count > 1)
         {
             filter_to_drop_text = SaveSystem.GetText("multiple_values");
@@ -813,12 +820,12 @@ public class UI : MonoBehaviour
     {
         bool hasError = false;
 
-        if (double.Parse(filter_from_min.text) > double.Parse(filter_from_max.text))
+        if (filter_from_min.GetComponent<InputChecker>().doubleInput > filter_from_max.GetComponent<InputChecker>().doubleInput)
         {
             StartCoroutine(ErrorShow(filter_from_min.gameObject, filter_from_max.gameObject));
             hasError = true;
         }
-        if (double.Parse(filter_to_min.text) > double.Parse(filter_to_max.text))
+        if (filter_to_min.GetComponent<InputChecker>().doubleInput >filter_to_max.GetComponent<InputChecker>().doubleInput)
         {
             StartCoroutine(ErrorShow(filter_to_min.gameObject, filter_to_max.gameObject));
             hasError = true;
@@ -850,8 +857,8 @@ public class UI : MonoBehaviour
         index = 0;
 
         filtredDataList = dataList.Where(data =>
-    data.inputValue >= double.Parse(filter_from_min.text) && data.inputValue <= double.Parse(filter_from_max.text) &&
-    data.resultText >= double.Parse(filter_to_min.text) && data.resultText <= double.Parse(filter_to_max.text) &&
+    data.inputValue >= filter_from_min.GetComponent<InputChecker>().doubleInput && data.inputValue <= filter_from_max.GetComponent<InputChecker>().doubleInput &&
+    data.resultText >= filter_to_min.GetComponent<InputChecker>().doubleInput && data.resultText <= filter_to_max.GetComponent<InputChecker>().doubleInput &&
     uniqueConvertFromValues.Contains(data.convertFrom_drop) &&
     uniqueConvertToValues.Contains(data.convertTo_drop) &&
     data.date >= minDate && data.date <= maxDate
@@ -862,11 +869,13 @@ public class UI : MonoBehaviour
         if (filtredDataList.Count == 0)
         {
             NoDataIndicator();
+            sort_filter.SetActive(true);
         }
-        sort_filter.SetActive(true);
-        ToFilterLayer();
+        else
+        {
+            ToFilterLayer();
+        }
         StartCoroutine(ToastShow("filtred"));
-
     }
 
     public void ResetFilter()
